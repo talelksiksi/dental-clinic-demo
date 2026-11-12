@@ -9,7 +9,7 @@ const colorFor = str => COLORS[(str||'').split('').reduce((a,c)=>a+c.charCodeAt(
 
 /* ── Comptes de démonstration (volontairement publics : l'indice les affiche) ── */
 const USERS = {
-  dentiste:   { password:'sourire', name:'Dr Sarah Mitchell', label:'Dentiste',   initials:'SM', greet:'Docteur',
+  dentiste:   { password:'sourire', name:'Dr Salma Ben Ammar', label:'Dentiste',   initials:'SB', greet:'Docteur',
                 welcome:'Bienvenue Docteur ! Votre fauteuil vous attend (il a l\'air impatient).' },
   assistante: { password:'molaire', name:'Inès Haddad',       label:'Assistante', initials:'IH', greet:'Inès',
                 welcome:'Bonjour Inès ! Les rapports et réglages sont réservés au dentiste — tout le reste est à vous.' },
@@ -45,7 +45,7 @@ const DB = {
 /* ══════════════════════════════════════════
    DONNÉES D'EXEMPLE
 ══════════════════════════════════════════ */
-const SEED_VERSION = '3';
+const SEED_VERSION = '4';
 function clearDemoData() {
   Object.keys(localStorage).filter(k=>k.startsWith('dc_')).forEach(k=>localStorage.removeItem(k));
 }
@@ -55,22 +55,22 @@ function seedData() {
   localStorage.setItem('dc_seed_version', SEED_VERSION);
 
   DB.set('staff',[
-    {id:1,firstName:'Sarah',   lastName:'Mitchell',  role:'Dentiste',             phone:'+213 555 010 001',email:'s.mitchell@dental-clinic.example',license:'CD-10023',exp:12,notes:'Dentisterie cosmétique et Invisalign.'},
-    {id:2,firstName:'Karim',   lastName:'Boukhalfa', role:'Orthodontiste',         phone:'+213 555 010 002',email:'k.boukhalfa@dental-clinic.example',license:'CD-10045',exp:8, notes:'Appareils, gouttières et corrections d\'occlusion.'},
-    {id:3,firstName:'Aïcha',   lastName:'Bensalem',  role:'Chirurgien oral',       phone:'+213 555 010 003',email:'a.bensalem@dental-clinic.example', license:'CD-10067',exp:15,notes:'Implants, extractions, greffes osseuses.'},
-    {id:4,firstName:'Yacine',  lastName:'Mahieddine', role:'Endodontiste',         phone:'+213 555 010 004',email:'y.mahieddine@dental-clinic.example',license:'CD-10089',exp:6, notes:'Spécialiste en traitement canalaire.'},
-    {id:5,firstName:'Leila',   lastName:'Cherif',    role:'Hygiéniste dentaire',   phone:'+213 555 010 005',email:'l.cherif@dental-clinic.example',   license:'HD-2034', exp:5, notes:'Détartrage, prophylaxie et éducation du patient.'},
-    {id:6,firstName:'Inès',    lastName:'Haddad',    role:'Assistante dentaire',   phone:'+213 555 010 006',email:'i.haddad@dental-clinic.example',   license:'',        exp:4, notes:'Accueil, agenda, stérilisation et préparation du fauteuil.'},
+    {id:1,firstName:'Salma',   lastName:'Ben Ammar', role:'Dentiste',             phone:'+216 71 400 101',email:'s.benammar@dental-clinic.example',license:'CD-10023',exp:12,notes:'Dentisterie cosmétique et Invisalign.'},
+    {id:2,firstName:'Karim',   lastName:'Trabelsi' , role:'Orthodontiste',         phone:'+216 71 400 102',email:'k.trabelsi@dental-clinic.example',license:'CD-10045',exp:8, notes:'Appareils, gouttières et corrections d\'occlusion.'},
+    {id:3,firstName:'Aïcha',   lastName:'Gharbi',  role:'Chirurgien oral',       phone:'+216 71 400 103',email:'a.gharbi@dental-clinic.example', license:'CD-10067',exp:15,notes:'Implants, extractions, greffes osseuses.'},
+    {id:4,firstName:'Yassine', lastName:'Jebali'    , role:'Endodontiste',         phone:'+216 71 400 104',email:'y.jebali@dental-clinic.example',license:'CD-10089',exp:6, notes:'Spécialiste en traitement canalaire.'},
+    {id:5,firstName:'Leïla',   lastName:'Mansouri',    role:'Hygiéniste dentaire',   phone:'+216 71 400 105',email:'l.mansouri@dental-clinic.example',   license:'HD-2034', exp:5, notes:'Détartrage, prophylaxie et éducation du patient.'},
+    {id:6,firstName:'Inès',    lastName:'Haddad',    role:'Assistante dentaire',   phone:'+216 71 400 106',email:'i.haddad@dental-clinic.example',   license:'',        exp:4, notes:'Accueil, agenda, stérilisation et préparation du fauteuil.'},
   ]);
   localStorage.setItem('dc_id_staff','6');
 
   DB.set('patients',[
-    {id:1,firstName:'Amina',   lastName:'Boudjemaa', dob:'1985-03-22',gender:'Féminin',   phone:'+213 555 301 001',email:'amina.b@email.dz',   address:'45 Rue Didouche, Alger',        bloodType:'A+', occupation:'Enseignante', referredBy:'Dr. Benamar',patientSince:'2020-01-15',allergies:'Pénicilline',          medications:'Aucun',          conditions:'Anxiété légère',                     dentalHistory:'Deux obturations en 2019',          smoker:'Non',lastVisit:'2024-11-10',notes:'Préfère les rendez-vous le matin.',emergencyName:'Omar Boudjemaa',   emergencyPhone:'+213 555 901 001',emergencyRelation:'Époux',   emergencyEmail:'',createdAt:'2020-01-15T09:00:00Z'},
-    {id:2,firstName:'Sofiane', lastName:'Meziani',   dob:'1978-07-14',gender:'Masculin',  phone:'+213 555 301 002',email:'s.meziani@email.dz',  address:'12 Bd Krim Belkacem, Oran',     bloodType:'O+', occupation:'Ingénieur',   referredBy:'',           patientSince:'2021-03-10',allergies:'Latex',               medications:'Lisinopril 10mg',conditions:'Hypertension, Diabète type 2',        dentalHistory:'Traitement canalaire sur la 14 en 2020',  smoker:'Non',lastVisit:'2024-12-01',notes:'Vérifier la tension avant les soins.', emergencyName:'Nadia Meziani',    emergencyPhone:'+213 555 901 002',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2021-03-10T10:00:00Z'},
-    {id:3,firstName:'Yasmine', lastName:'Khelifa',   dob:'1995-11-30',gender:'Féminin',   phone:'+213 555 301 003',email:'yasmine.k@email.dz',  address:'88 Cité Universitaire, Constantine',bloodType:'B+',occupation:'Infirmière',referredBy:'Amina Boudjemaa',patientSince:'2022-06-20',allergies:'Aucune',           medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Appareil orthodontique adolescence',smoker:'Non',lastVisit:'2025-01-15',notes:'Très bonne compliance.',                emergencyName:'Hamid Khelifa',    emergencyPhone:'+213 555 901 003',emergencyRelation:'Père',    emergencyEmail:'',createdAt:'2022-06-20T11:00:00Z'},
-    {id:4,firstName:'Noureddine',lastName:'Sahraoui',dob:'1962-04-08',gender:'Masculin',  phone:'+213 555 301 004',email:'n.sahraoui@email.dz', address:'33 Rue des Frères Abbas, Annaba',bloodType:'AB+',occupation:'Retraité',  referredBy:'',           patientSince:'2019-09-05',allergies:'Aspirine, Sulfamides', medications:'Warfarine, Metformine, Atorvastatine',conditions:'Cardiopathie, Diabète, Hypertension',dentalHistory:'Plusieurs extractions, prothèse partielle haute',smoker:'Oui',lastVisit:'2024-10-20',notes:'Warfarine — vérifier l\'INR avant extraction.',emergencyName:'Houria Sahraoui',emergencyPhone:'+213 555 901 004',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2019-09-05T08:00:00Z'},
-    {id:5,firstName:'Rania',   lastName:'Belhocine', dob:'2001-08-19',gender:'Féminin',   phone:'+213 555 301 005',email:'rania.b@email.dz',    address:'71 Cité Djamel, Skikda',        bloodType:'O-', occupation:'Étudiante',  referredBy:'Yasmine Khelifa',patientSince:'2023-02-14',allergies:'Aucune',           medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Aucun antécédent dentaire',          smoker:'Non',lastVisit:'2025-02-28',notes:'Première patiente, légère anxiété dentaire.',emergencyName:'Samira Belhocine',emergencyPhone:'+213 555 901 005',emergencyRelation:'Mère',    emergencyEmail:'',createdAt:'2023-02-14T14:00:00Z'},
-    {id:6,firstName:'Tarek',   lastName:'Guettafi',  dob:'1970-12-03',gender:'Masculin',  phone:'+213 555 301 006',email:'t.guettafi@email.dz',  address:'19 Rue Mokhtar Khalef, Batna',  bloodType:'A-', occupation:'Comptable',  referredBy:'',           patientSince:'2020-11-22',allergies:'Codéine',             medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Couronne sur la 46 en 2021',           smoker:'Non',lastVisit:'2025-01-08',notes:'',emergencyName:'Sabrina Guettafi',emergencyPhone:'+213 555 901 006',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2020-11-22T13:00:00Z'},
+    {id:1,firstName:'Amira',   lastName:'Ben Salah', dob:'1985-03-22',gender:'Féminin',   phone:'+216 98 301 001',email:'amira.bensalah@exemple.tn',   address:'45 Rue de Marseille, Tunis',        bloodType:'A+', occupation:'Enseignante', referredBy:'Dr Kamoun',patientSince:'2020-01-15',allergies:'Pénicilline',          medications:'Aucun',          conditions:'Anxiété légère',                     dentalHistory:'Deux obturations en 2019',          smoker:'Non',lastVisit:'2024-11-10',notes:'Préfère les rendez-vous le matin.',emergencyName:'Omar Ben Salah',   emergencyPhone:'+216 55 901 001',emergencyRelation:'Époux',   emergencyEmail:'',createdAt:'2020-01-15T09:00:00Z'},
+    {id:2,firstName:'Sofiene', lastName:'Hammami',   dob:'1978-07-14',gender:'Masculin',  phone:'+216 98 301 002',email:'s.hammami@exemple.tn',  address:'12 Avenue Hédi Chaker, Sfax',     bloodType:'O+', occupation:'Ingénieur',   referredBy:'',           patientSince:'2021-03-10',allergies:'Latex',               medications:'Lisinopril 10mg',conditions:'Hypertension, Diabète type 2',        dentalHistory:'Traitement canalaire sur la 14 en 2020',  smoker:'Non',lastVisit:'2024-12-01',notes:'Vérifier la tension avant les soins.', emergencyName:'Nadia Hammami',    emergencyPhone:'+216 55 901 002',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2021-03-10T10:00:00Z'},
+    {id:3,firstName:'Yosra',   lastName:'Chaabane',   dob:'1995-11-30',gender:'Féminin',   phone:'+216 98 301 003',email:'yosra.c@exemple.tn',  address:'8 Rue Ibn Khaldoun, Sousse',bloodType:'B+',occupation:'Infirmière',referredBy:'Amira Ben Salah',patientSince:'2022-06-20',allergies:'Aucune',           medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Appareil orthodontique adolescence',smoker:'Non',lastVisit:'2025-01-15',notes:'Très bonne compliance.',                emergencyName:'Hamadi Chaabane',    emergencyPhone:'+216 55 901 003',emergencyRelation:'Père',    emergencyEmail:'',createdAt:'2022-06-20T11:00:00Z'},
+    {id:4,firstName:'Noureddine',lastName:'Ayari'   ,dob:'1962-04-08',gender:'Masculin',  phone:'+216 98 301 004',email:'n.ayari@exemple.tn', address:'33 Avenue Farhat Hached, Gabès',bloodType:'AB+',occupation:'Retraité',  referredBy:'',           patientSince:'2019-09-05',allergies:'Aspirine, Sulfamides', medications:'Warfarine, Metformine, Atorvastatine',conditions:'Cardiopathie, Diabète, Hypertension',dentalHistory:'Plusieurs extractions, prothèse partielle haute',smoker:'Oui',lastVisit:'2024-10-20',notes:'Warfarine — vérifier l\'INR avant extraction.',emergencyName:'Habiba Ayari',emergencyPhone:'+216 55 901 004',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2019-09-05T08:00:00Z'},
+    {id:5,firstName:'Rania',   lastName:'Mejri'    , dob:'2001-08-19',gender:'Féminin',   phone:'+216 98 301 005',email:'rania.mejri@exemple.tn',    address:'7 Rue de Djerba, Médenine',        bloodType:'O-', occupation:'Étudiante',  referredBy:'Yosra Chaabane',patientSince:'2023-02-14',allergies:'Aucune',           medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Aucun antécédent dentaire',          smoker:'Non',lastVisit:'2025-02-28',notes:'Première patiente, légère anxiété dentaire.',emergencyName:'Samira Mejri',emergencyPhone:'+216 55 901 005',emergencyRelation:'Mère',    emergencyEmail:'',createdAt:'2023-02-14T14:00:00Z'},
+    {id:6,firstName:'Tarek',   lastName:'Zouari',  dob:'1970-12-03',gender:'Masculin',  phone:'+216 98 301 006',email:'t.zouari@exemple.tn',  address:'19 Rue Ali Belhouane, Nabeul',  bloodType:'A-', occupation:'Comptable',  referredBy:'',           patientSince:'2020-11-22',allergies:'Codéine',             medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Couronne sur la 46 en 2021',           smoker:'Non',lastVisit:'2025-01-08',notes:'',emergencyName:'Sonia Zouari',emergencyPhone:'+216 55 901 006',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2020-11-22T13:00:00Z'},
   ]);
   localStorage.setItem('dc_id_patients','6');
 
@@ -93,20 +93,20 @@ function seedData() {
   localStorage.setItem('dc_id_appointments','8');
 
   DB.set('treatments',[
-    {id:1,patientId:1,dentistId:5,date:yesterday,    teeth:['11','12','21','22','31','41'],procedure:'Détartrage & Polissage',  description:'Prophylaxie complète, tartre léger',                   notes:'Bonne hygiène bucco-dentaire.',               followup:'Brossage 2x/jour, fil dentaire 1x/jour.',       cost:120, status:'Terminé',  createdAt:new Date().toISOString()},
-    {id:2,patientId:2,dentistId:4,date:yesterday,    teeth:['36'],           procedure:'Traitement canalaire',    description:'Préparation biomécanique et obturation de la 36',     notes:'3 canaux. Patient bien toléré.',               followup:'Ibuprofène 400mg si douleur. Retour dans 2 sem.', cost:9500,status:'En cours', createdAt:new Date().toISOString()},
-    {id:3,patientId:3,dentistId:1,date:fmt(new Date(today.getTime()-7*86400000)),  teeth:['12'],procedure:'Obturation composite',  description:'Restauration composite classe II',                     notes:'Carie MO, teinte A2.',                         followup:'Éviter les aliments durs pendant 24h.',          cost:1800,status:'Terminé',  createdAt:new Date().toISOString()},
-    {id:4,patientId:6,dentistId:1,date:fmt(new Date(today.getTime()-14*86400000)), teeth:['46'],procedure:'Préparation de couronne',description:'Préparation couronne céramique intégrale, temporaire posée',notes:'Préparation sous digue. Temporaire collée.',followup:'Éviter les aliments collants. Retour dans 2 sem.',cost:7500,status:'Terminé',  createdAt:new Date().toISOString()},
-    {id:5,patientId:4,dentistId:3,date:fmt(new Date(today.getTime()-30*86400000)), teeth:['14','15'],procedure:'Extraction chirurgicale',description:'Extraction chirurgicale 14 et 15',               notes:'INR 2,1 — dans les limites. Hémostase obtenue.',followup:'Compresse 30 min. Alimentation molle 3 j. Amoxicilline 500mg x7.',cost:4200,status:'Terminé',createdAt:new Date().toISOString()},
+    {id:1,patientId:1,dentistId:5,date:yesterday,    teeth:['11','12','21','22','31','41'],procedure:'Détartrage & Polissage',  description:'Prophylaxie complète, tartre léger',                   notes:'Bonne hygiène bucco-dentaire.',               followup:'Brossage 2x/jour, fil dentaire 1x/jour.',       cost:70,  status:'Terminé',  createdAt:new Date().toISOString()},
+    {id:2,patientId:2,dentistId:4,date:yesterday,    teeth:['36'],           procedure:'Traitement canalaire',    description:'Préparation biomécanique et obturation de la 36',     notes:'3 canaux. Patient bien toléré.',               followup:'Ibuprofène 400mg si douleur. Retour dans 2 sem.', cost:250, status:'En cours', createdAt:new Date().toISOString()},
+    {id:3,patientId:3,dentistId:1,date:fmt(new Date(today.getTime()-7*86400000)),  teeth:['12'],procedure:'Obturation composite',  description:'Restauration composite classe II',                     notes:'Carie MO, teinte A2.',                         followup:'Éviter les aliments durs pendant 24h.',          cost:80,  status:'Terminé',  createdAt:new Date().toISOString()},
+    {id:4,patientId:6,dentistId:1,date:fmt(new Date(today.getTime()-14*86400000)), teeth:['46'],procedure:'Préparation de couronne',description:'Préparation couronne céramique intégrale, temporaire posée',notes:'Préparation sous digue. Temporaire collée.',followup:'Éviter les aliments collants. Retour dans 2 sem.',cost:450, status:'Terminé',  createdAt:new Date().toISOString()},
+    {id:5,patientId:4,dentistId:3,date:fmt(new Date(today.getTime()-30*86400000)), teeth:['14','15'],procedure:'Extraction chirurgicale',description:'Extraction chirurgicale 14 et 15',               notes:'INR 2,1 — dans les limites. Hémostase obtenue.',followup:'Compresse 30 min. Alimentation molle 3 j. Amoxicilline 500mg x7.',cost:180, status:'Terminé',createdAt:new Date().toISOString()},
   ]);
   localStorage.setItem('dc_id_treatments','5');
 
   DB.set('payments',[
-    {id:1,patientId:1,date:yesterday,   dueDate:'',method:'Espèces',        status:'Payé',       paidAmount:120,  discount:0,notes:'',invoiceNumber:'FAC-001',items:[{description:'Détartrage & Polissage',amount:120}],  createdAt:new Date().toISOString()},
-    {id:2,patientId:2,date:yesterday,   dueDate:fmt(new Date(today.getTime()+14*86400000)),method:'Assurance',status:'Partiel',paidAmount:5000,discount:0,notes:'Dossier assurance soumis.',invoiceNumber:'FAC-002',items:[{description:'Traitement canalaire - Séance 1',amount:9500}],createdAt:new Date().toISOString()},
-    {id:3,patientId:3,date:fmt(new Date(today.getTime()-7*86400000)), dueDate:'',method:'Espèces', status:'Payé',paidAmount:1800,discount:0,notes:'',invoiceNumber:'FAC-003',items:[{description:'Obturation composite 12',amount:1800}],createdAt:new Date().toISOString()},
-    {id:4,patientId:6,date:fmt(new Date(today.getTime()-14*86400000)),dueDate:td,method:'Carte de débit',status:'Partiel',paidAmount:4000,discount:5,notes:'Solde dû à la pose de couronne.',invoiceNumber:'FAC-004',items:[{description:'Préparation couronne',amount:7500},{description:'Couronne provisoire',amount:800}],createdAt:new Date().toISOString()},
-    {id:5,patientId:4,date:fmt(new Date(today.getTime()-30*86400000)),dueDate:'',method:'Espèces',status:'Payé',paidAmount:4200,discount:0,notes:'',invoiceNumber:'FAC-005',items:[{description:'Extraction chirurgicale 14',amount:2100},{description:'Extraction chirurgicale 15',amount:2100}],createdAt:new Date().toISOString()},
+    {id:1,patientId:1,date:yesterday,   dueDate:'',method:'Espèces',        status:'Payé',       paidAmount:70,   discount:0,notes:'',invoiceNumber:'FAC-001',items:[{description:'Détartrage & Polissage',amount:70}],  createdAt:new Date().toISOString()},
+    {id:2,patientId:2,date:yesterday,   dueDate:fmt(new Date(today.getTime()+14*86400000)),method:'CNAM / Assurance',status:'Partiel',paidAmount:150,discount:0,notes:'Bulletin de soins CNAM transmis.',invoiceNumber:'FAC-002',items:[{description:'Traitement canalaire - Séance 1',amount:250}],createdAt:new Date().toISOString()},
+    {id:3,patientId:3,date:fmt(new Date(today.getTime()-7*86400000)), dueDate:'',method:'Espèces', status:'Payé',paidAmount:80,discount:0,notes:'',invoiceNumber:'FAC-003',items:[{description:'Obturation composite 12',amount:80}],createdAt:new Date().toISOString()},
+    {id:4,patientId:6,date:fmt(new Date(today.getTime()-14*86400000)),dueDate:td,method:'Carte de débit',status:'Partiel',paidAmount:200,discount:5,notes:'Solde dû à la pose de couronne.',invoiceNumber:'FAC-004',items:[{description:'Préparation couronne',amount:450},{description:'Couronne provisoire',amount:40}],createdAt:new Date().toISOString()},
+    {id:5,patientId:4,date:fmt(new Date(today.getTime()-30*86400000)),dueDate:'',method:'Espèces',status:'Payé',paidAmount:180,discount:0,notes:'',invoiceNumber:'FAC-005',items:[{description:'Extraction chirurgicale 14',amount:90},{description:'Extraction chirurgicale 15',amount:90}],createdAt:new Date().toISOString()},
   ]);
   localStorage.setItem('dc_id_payments','5');
   localStorage.setItem('dc_id_invoices','5');
@@ -121,11 +121,11 @@ function seedData() {
 
   const ago = m => new Date(Date.now()-m*60000).toISOString();
   DB.set('activity',[
-    {type:'appt',     text:'RDV de Sofiane Meziani : statut → En cours', time:ago(12)},
-    {type:'payment',  text:'Facture FAC-004 : acompte de 4 000,00 € reçu', time:ago(95)},
-    {type:'treatment',text:'Détartrage & Polissage effectué sur Amina Boudjemaa', time:ago(60*20)},
-    {type:'patient',  text:'Nouvelle patiente enregistrée : Rania Belhocine', time:ago(60*26)},
-    {type:'appt',     text:'Nouveau RDV pour Tarek Guettafi demain à 11:00', time:ago(60*30)},
+    {type:'appt',     text:'RDV de Sofiene Hammami : statut → En cours', time:ago(12)},
+    {type:'payment',  text:'Facture FAC-004 : acompte de 200,000 DT reçu', time:ago(95)},
+    {type:'treatment',text:'Détartrage & Polissage effectué sur Amira Ben Salah', time:ago(60*20)},
+    {type:'patient',  text:'Nouvelle patiente enregistrée : Rania Mejri', time:ago(60*26)},
+    {type:'appt',     text:'Nouveau RDV pour Tarek Zouari demain à 11:00', time:ago(60*30)},
   ]);
 
   DB.set('seeded',[true]);
@@ -145,7 +145,10 @@ const Utils = {
     return Math.floor((Date.now()-new Date(dob+'T00:00:00').getTime())/(365.25*24*3600*1000));
   },
   currency(n) {
-    return parseFloat(n||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+    return parseFloat(n||0).toLocaleString('fr-FR',{minimumFractionDigits:3,maximumFractionDigits:3})+' DT';
+  },
+  currencyShort(n) {
+    return Math.round(parseFloat(n||0)).toLocaleString('fr-FR')+' DT';
   },
   patientName(id) {
     const p = DB.patients().find(x=>x.id==id);
@@ -510,7 +513,7 @@ const Dashboard = {
     document.getElementById('stat-total-patients').textContent = patients.length;
     document.getElementById('stat-today-appts').textContent    = appts.filter(a=>a.date===today).length;
     const rev = payments.filter(p=>p.date>=ms&&p.status!=='En attente').reduce((s,p)=>s+parseFloat(p.paidAmount||0),0);
-    document.getElementById('stat-monthly-revenue').textContent= Utils.currency(rev);
+    document.getElementById('stat-monthly-revenue').textContent= Utils.currencyShort(rev);
     document.getElementById('stat-pending-payments').textContent= payments.filter(p=>['En attente','Partiel','En retard'].includes(p.status)).length;
 
     // Planning du jour
@@ -567,7 +570,7 @@ const Dashboard = {
     this.charts.rev=new Chart(ctx,{
       type:'bar',
       data:{labels:months,datasets:[{label:'Revenu',data:revs,backgroundColor:'rgba(61,109,120,.15)',borderColor:'#3d6d78',borderWidth:2,borderRadius:6,hoverBackgroundColor:'rgba(61,109,120,.3)'}]},
-      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+' €'},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}}
+      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+' DT'},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}}
     });
   },
 
@@ -1227,10 +1230,10 @@ const Payments = {
     const pendTotal=pend.reduce((s,p)=>{ const t=p.items.reduce((st,i)=>st+parseFloat(i.amount||0),0)*(1-(p.discount||0)/100); return s+(t-parseFloat(p.paidAmount||0)); },0);
     const ms=new Date(); ms.setDate(1); const msStr=ms.toISOString().split('T')[0];
     const month=pays.filter(p=>p.date>=msStr).reduce((s,p)=>s+parseFloat(p.paidAmount||0),0);
-    document.getElementById('pay-stat-paid').textContent   = Utils.currency(paid);
-    document.getElementById('pay-stat-pending').textContent= Utils.currency(pendTotal);
+    document.getElementById('pay-stat-paid').textContent   = Utils.currencyShort(paid);
+    document.getElementById('pay-stat-pending').textContent= Utils.currencyShort(pendTotal);
     document.getElementById('pay-stat-count').textContent  = pays.length;
-    document.getElementById('pay-stat-month').textContent  = Utils.currency(month);
+    document.getElementById('pay-stat-month').textContent  = Utils.currencyShort(month);
     this._renderTable(pays.sort((a,b)=>b.date.localeCompare(a.date)));
   },
   filter() {
@@ -1266,7 +1269,7 @@ const Payments = {
   addItem(desc='',amount='') {
     const c=document.getElementById('pay-items-container');
     const row=document.createElement('div'); row.className='pay-item-row';
-    row.innerHTML=`<input type="text" list="svc-datalist" placeholder="Description (ex: Détartrage)" value="${desc}" oninput="Payments.fillPrice(this)"/><input type="number" class="amount-input" placeholder="0.00" value="${amount}" min="0" step="0.01" oninput="Payments.updateTotals()"/><button type="button" onclick="this.parentElement.remove();Payments.updateTotals()"><i class="fa-solid fa-xmark"></i></button>`;
+    row.innerHTML=`<input type="text" list="svc-datalist" placeholder="Description (ex: Détartrage)" value="${desc}" oninput="Payments.fillPrice(this)"/><input type="number" class="amount-input" placeholder="0,000" value="${amount}" min="0" step="0.001" oninput="Payments.updateTotals()"/><button type="button" onclick="this.parentElement.remove();Payments.updateTotals()"><i class="fa-solid fa-xmark"></i></button>`;
     c.appendChild(row); this.updateTotals();
   },
   updateTotals() {
@@ -1276,7 +1279,7 @@ const Payments = {
     const tot=sub*(1-disc/100);
     const paid=parseFloat(document.getElementById('pay-paid-amount')?.value)||0;
     const bal=tot-paid;
-    const f=n=>n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+    const f=n=>Utils.currency(n);
     const s=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=f(v); };
     s('inv-subtotal',sub); s('inv-total',tot); s('inv-paid-display',paid); s('inv-balance',bal<0?0:bal);
   },
@@ -1368,8 +1371,8 @@ const Payments = {
     const tot=sub*(1-(p.discount||0)/100);
     const bal=tot-parseFloat(p.paidAmount||0);
     const s=DB.settings();
-    const cn=s.clinicName||'Dental Clinic'; const cp=s.clinicPhone||'+213 555 123 456'; const ca=s.clinicAddr||'12 Rue des Acacias, Alger';
-    const f=n=>n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';
+    const cn=s.clinicName||'Dental Clinic'; const cp=s.clinicPhone||'+216 71 400 100'; const ca=[s.clinicAddr||'12 Avenue de la Liberté',s.clinicCity||'1002 Tunis'].join(', ');
+    const f=n=>Utils.currency(n);
     document.getElementById('invoice-print-content').innerHTML=`
       <div class="invoice-print-header"><div><div class="invoice-print-title">FACTURE</div><div style="color:var(--text-muted);font-size:.875rem">${p.invoiceNumber||'—'}</div></div><div style="text-align:right"><strong style="font-size:1.1rem">${cn}</strong><br><span style="color:var(--text-muted);font-size:.85rem">${ca}</span><br><span style="color:var(--text-muted);font-size:.85rem">${cp}</span></div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:1.5rem">
@@ -1417,7 +1420,7 @@ const Reports = {
     document.getElementById('rep-new-patients').textContent =patients.length;
     document.getElementById('rep-total-appts').textContent  =appts.length;
     document.getElementById('rep-total-treatments').textContent=treats.length;
-    document.getElementById('rep-revenue').textContent      =Utils.currency(rev);
+    document.getElementById('rep-revenue').textContent      =Utils.currencyShort(rev);
     this._revChart(DB.payments()); this._apptChart(appts); this._procChart(treats); this._topProc(treats);
   },
   refresh() { this.render(); },
@@ -1426,7 +1429,7 @@ const Reports = {
     for(let i=11;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;months.push(d.toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}));revs.push(pays.filter(p=>p.date&&p.date.startsWith(k)).reduce((s,p)=>s+parseFloat(p.paidAmount||0),0));}
     const ctx=document.getElementById('rep-revenue-chart')?.getContext('2d'); if(!ctx) return;
     if(this.charts.rev) this.charts.rev.destroy();
-    this.charts.rev=new Chart(ctx,{type:'line',data:{labels:months,datasets:[{label:'Revenu',data:revs,borderColor:'#3d6d78',backgroundColor:'rgba(61,109,120,.1)',tension:.4,fill:true,pointBackgroundColor:'#3d6d78',pointRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+' €'},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}}});
+    this.charts.rev=new Chart(ctx,{type:'line',data:{labels:months,datasets:[{label:'Revenu',data:revs,borderColor:'#3d6d78',backgroundColor:'rgba(61,109,120,.1)',tension:.4,fill:true,pointBackgroundColor:'#3d6d78',pointRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+' DT'},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}}});
   },
   _apptChart(appts) {
     const statuses=['Planifié','Confirmé','En cours','Terminé','Annulé','Absent'];
@@ -1535,11 +1538,10 @@ const HORAIRES_DEFAULT=[
   {day:'Dimanche', open:false,from:'',    to:''},
 ];
 const SERVICES_DEFAULT=[
-  {name:'Bilan & Détartrage',price:120},{name:'Obturation composite',price:1800},
-  {name:'Obturation amalgame',price:1500},{name:'Traitement canalaire',price:9500},
-  {name:'Extraction dentaire',price:2000},{name:'Pose de couronne',price:12000},
-  {name:'Implant dentaire',price:35000},{name:'Blanchiment dentaire',price:4000},
-  {name:'Consultation orthodontique',price:2000},{name:'Détartrage & Polissage',price:1200},
+  {name:'Consultation',price:40},{name:'Bilan & Détartrage',price:60},{name:'Détartrage & Polissage',price:70},
+  {name:'Obturation composite',price:80},{name:'Obturation amalgame',price:60},{name:'Traitement canalaire',price:250},
+  {name:'Extraction dentaire',price:50},{name:'Extraction chirurgicale',price:90},{name:'Pose de couronne',price:450},
+  {name:'Implant dentaire',price:1800},{name:'Blanchiment dentaire',price:400},{name:'Consultation orthodontique',price:50},
 ];
 
 const Settings = {
@@ -1561,7 +1563,7 @@ const Settings = {
   },
   _renderSvc() {
     document.getElementById('services-list').innerHTML=this.svc.map((s,i)=>`
-      <div class="service-row"><input type="text" value="${s.name}" onchange="Settings.svc[${i}].name=this.value"/><span style="color:var(--text-muted);font-size:.875rem">€</span><input type="number" class="price-input" value="${s.price}" min="0" step="1" onchange="Settings.svc[${i}].price=parseFloat(this.value)||0"/><button onclick="Settings.removeSvc(${i})"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
+      <div class="service-row"><input type="text" value="${s.name}" onchange="Settings.svc[${i}].name=this.value"/><span style="color:var(--text-muted);font-size:.875rem">DT</span><input type="number" class="price-input" value="${s.price}" min="0" step="1" onchange="Settings.svc[${i}].price=parseFloat(this.value)||0"/><button onclick="Settings.removeSvc(${i})"><i class="fa-solid fa-xmark"></i></button></div>`).join('');
   },
   addService() { this.svc.push({name:'Nouveau service',price:0}); this._renderSvc(); },
   removeSvc(i) { this.svc.splice(i,1); this._renderSvc(); },

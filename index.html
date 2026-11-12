@@ -194,9 +194,9 @@
             </div>
           </div>
           <div class="stat-card stat-purple">
-            <div class="stat-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
             <div class="stat-info">
-              <span class="stat-number" id="stat-monthly-revenue">0 €</span>
+              <span class="stat-number" id="stat-monthly-revenue">0 DT</span>
               <span class="stat-label">Revenu mensuel</span>
             </div>
             <div class="stat-trend up"><i class="fa-solid fa-arrow-trend-up"></i> +8%</div>
@@ -426,7 +426,7 @@
             </div>
             <div id="detail-payments" class="tab-content">
               <div class="tab-toolbar">
-                <span class="tab-count" id="detail-pay-count">0 € total</span>
+                <span class="tab-count" id="detail-pay-count">0 DT versé</span>
                 <button class="btn-sm-primary" onclick="Payments.openNew({patientId:App.currentPatientId})"><i class="fa-solid fa-plus"></i> Facture</button>
               </div>
               <div id="detail-payments-list"></div>
@@ -541,10 +541,10 @@
           <button class="btn-primary" onclick="Payments.openNew()"><i class="fa-solid fa-plus"></i> Nouvelle facture</button>
         </div>
         <div class="stats-grid stats-grid-sm">
-          <div class="stat-card stat-green"><div class="stat-icon"><i class="fa-solid fa-check-circle"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-paid">0 €</span><span class="stat-label">Total encaissé</span></div></div>
-          <div class="stat-card stat-orange"><div class="stat-icon"><i class="fa-solid fa-hourglass"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-pending">0 €</span><span class="stat-label">En attente</span></div></div>
+          <div class="stat-card stat-green"><div class="stat-icon"><i class="fa-solid fa-check-circle"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-paid">0 DT</span><span class="stat-label">Total encaissé</span></div></div>
+          <div class="stat-card stat-orange"><div class="stat-icon"><i class="fa-solid fa-hourglass"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-pending">0 DT</span><span class="stat-label">En attente</span></div></div>
           <div class="stat-card stat-blue"><div class="stat-icon"><i class="fa-solid fa-file-invoice"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-count">0</span><span class="stat-label">Total factures</span></div></div>
-          <div class="stat-card stat-purple"><div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-month">0 €</span><span class="stat-label">Ce mois-ci</span></div></div>
+          <div class="stat-card stat-purple"><div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-month">0 DT</span><span class="stat-label">Ce mois-ci</span></div></div>
         </div>
         <div class="toolbar">
           <div class="search-filter">
@@ -565,7 +565,7 @@
               <option value="Carte de crédit">Carte de crédit</option>
               <option value="Carte de débit">Carte de débit</option>
               <option value="Virement bancaire">Virement bancaire</option>
-              <option value="Assurance">Assurance</option>
+              <option value="CNAM / Assurance">CNAM / Assurance</option>
               <option value="Chèque">Chèque</option>
             </select>
           </div>
@@ -603,7 +603,7 @@
           <div class="stat-card stat-blue"><div class="stat-icon"><i class="fa-solid fa-user-plus"></i></div><div class="stat-info"><span class="stat-number" id="rep-new-patients">0</span><span class="stat-label">Nouveaux patients</span></div></div>
           <div class="stat-card stat-green"><div class="stat-icon"><i class="fa-solid fa-calendar-check"></i></div><div class="stat-info"><span class="stat-number" id="rep-total-appts">0</span><span class="stat-label">Rendez-vous</span></div></div>
           <div class="stat-card stat-purple"><div class="stat-icon"><i class="fa-solid fa-syringe"></i></div><div class="stat-info"><span class="stat-number" id="rep-total-treatments">0</span><span class="stat-label">Soins effectués</span></div></div>
-          <div class="stat-card stat-orange"><div class="stat-icon"><i class="fa-solid fa-euro-sign"></i></div><div class="stat-info"><span class="stat-number" id="rep-revenue">0 €</span><span class="stat-label">Revenu</span></div></div>
+          <div class="stat-card stat-orange"><div class="stat-icon"><i class="fa-solid fa-coins"></i></div><div class="stat-info"><span class="stat-number" id="rep-revenue">0 DT</span><span class="stat-label">Revenu</span></div></div>
         </div>
         <div class="dashboard-grid">
           <div class="card chart-card"><div class="card-header"><h3><i class="fa-solid fa-chart-line"></i> Tendance des revenus</h3></div><div class="card-body"><canvas id="rep-revenue-chart" height="100"></canvas></div></div>
@@ -633,10 +633,10 @@
             <div class="card-body">
               <div class="form-grid">
                 <div class="form-group"><label>Nom de la clinique</label><input type="text" id="setting-clinic-name" value="Dental Clinic"/></div>
-                <div class="form-group"><label>Téléphone</label><input type="text" id="setting-clinic-phone" value="+213 555 123 456"/></div>
+                <div class="form-group"><label>Téléphone</label><input type="text" id="setting-clinic-phone" value="+216 71 400 100"/></div>
                 <div class="form-group"><label>E-mail</label><input type="text" id="setting-clinic-email" value="contact@dental-clinic.example"/></div>
-                <div class="form-group"><label>Adresse</label><input type="text" id="setting-clinic-address" value="12 Rue des Acacias"/></div>
-                <div class="form-group"><label>Ville</label><input type="text" id="setting-clinic-city" value="Alger, 16000"/></div>
+                <div class="form-group"><label>Adresse</label><input type="text" id="setting-clinic-address" value="12 Avenue de la Liberté"/></div>
+                <div class="form-group"><label>Ville</label><input type="text" id="setting-clinic-city" value="1002 Tunis"/></div>
                 <div class="form-group"><label>Site web</label><input type="text" id="setting-clinic-website" value="www.dental-clinic.example"/></div>
               </div>
               <button class="btn-primary mt-2" onclick="Settings.save()"><i class="fa-solid fa-save"></i> Enregistrer</button>
@@ -688,16 +688,16 @@
       </div>
       <div id="personal-tab" class="modal-tab-content active">
         <div class="form-grid">
-          <div class="form-group"><label>Prénom *</label><input type="text" id="p-first-name" placeholder="Ex: Mohamed"/></div>
-          <div class="form-group"><label>Nom *</label><input type="text" id="p-last-name" placeholder="Ex: Benali"/></div>
+          <div class="form-group"><label>Prénom *</label><input type="text" id="p-first-name" placeholder="Ex : Mohamed"/></div>
+          <div class="form-group"><label>Nom *</label><input type="text" id="p-last-name" placeholder="Ex : Ben Youssef"/></div>
           <div class="form-group"><label>Date de naissance *</label><input type="date" id="p-dob"/></div>
           <div class="form-group"><label>Sexe *</label><select id="p-gender"><option value="">Sélectionner</option><option value="Masculin">Masculin</option><option value="Féminin">Féminin</option><option value="Autre">Autre</option></select></div>
-          <div class="form-group"><label>Téléphone *</label><input type="tel" id="p-phone" placeholder="+213 555 000 000"/></div>
+          <div class="form-group"><label>Téléphone *</label><input type="tel" id="p-phone" placeholder="+216 20 000 000"/></div>
           <div class="form-group"><label>E-mail</label><input type="email" id="p-email" placeholder="email@exemple.com"/></div>
           <div class="form-group form-full"><label>Adresse</label><input type="text" id="p-address" placeholder="Rue, Ville, Code postal"/></div>
           <div class="form-group"><label>Groupe sanguin</label><select id="p-blood"><option value="">Inconnu</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div>
           <div class="form-group"><label>Profession</label><input type="text" id="p-occupation" placeholder="Ex: Enseignant"/></div>
-          <div class="form-group"><label>Référé par</label><input type="text" id="p-referred" placeholder="Ex: Dr. Martin"/></div>
+          <div class="form-group"><label>Référé par</label><input type="text" id="p-referred" placeholder="Ex : Dr Kamoun"/></div>
           <div class="form-group"><label>Patient depuis</label><input type="date" id="p-since"/></div>
           <div class="form-group"><label>Dernière visite dentaire</label><input type="date" id="p-last-visit"/></div>
         </div>
@@ -714,9 +714,9 @@
       </div>
       <div id="emergency-tab" class="modal-tab-content">
         <div class="form-grid">
-          <div class="form-group"><label>Nom du contact</label><input type="text" id="p-emg-name" placeholder="Ex: Fatima Benali"/></div>
+          <div class="form-group"><label>Nom du contact</label><input type="text" id="p-emg-name" placeholder="Ex : Fatma Ben Youssef"/></div>
           <div class="form-group"><label>Lien de parenté</label><input type="text" id="p-emg-relation" placeholder="Ex: Époux(se), Parent"/></div>
-          <div class="form-group"><label>Téléphone</label><input type="tel" id="p-emg-phone" placeholder="+213 555 000 000"/></div>
+          <div class="form-group"><label>Téléphone</label><input type="tel" id="p-emg-phone" placeholder="+216 20 000 000"/></div>
           <div class="form-group"><label>E-mail</label><input type="email" id="p-emg-email" placeholder="email@exemple.com"/></div>
         </div>
       </div>
@@ -771,7 +771,7 @@
           <div class="mini-tooth-chart" id="mini-tooth-chart"></div>
           <input type="hidden" id="treat-teeth"/>
         </div>
-        <div class="form-group"><label>Coût (€)</label><input type="number" id="treat-cost" min="0" step="0.01" placeholder="0.00"/></div>
+        <div class="form-group"><label>Coût (DT)</label><input type="number" id="treat-cost" min="0" step="0.001" placeholder="0,000"/></div>
         <div class="form-group"><label>Statut</label><select id="treat-status"><option value="Terminé">Terminé</option><option value="En cours">En cours</option><option value="Planifié">Planifié</option></select></div>
         <div class="form-group form-full"><label>Notes cliniques</label><textarea id="treat-notes" rows="3" placeholder="Détails sur le soin effectué…"></textarea></div>
         <div class="form-group form-full"><label>Instructions post-traitement</label><textarea id="treat-followup" rows="2" placeholder="Conseils au patient après le soin…"></textarea></div>
@@ -795,20 +795,20 @@
         <div class="form-group form-full"><label>Patient *</label><select id="pay-patient-id"><option value="">— Sélectionner un patient —</option></select></div>
         <div class="form-group"><label>Date de facture *</label><input type="date" id="pay-date"/></div>
         <div class="form-group"><label>Date d'échéance</label><input type="date" id="pay-due-date"/></div>
-        <div class="form-group"><label>Mode de paiement</label><select id="pay-method"><option value="Espèces">Espèces</option><option value="Carte de crédit">Carte de crédit</option><option value="Carte de débit">Carte de débit</option><option value="Virement bancaire">Virement bancaire</option><option value="Assurance">Assurance</option><option value="Chèque">Chèque</option></select></div>
+        <div class="form-group"><label>Mode de paiement</label><select id="pay-method"><option value="Espèces">Espèces</option><option value="Carte de crédit">Carte de crédit</option><option value="Carte de débit">Carte de débit</option><option value="Virement bancaire">Virement bancaire</option><option value="CNAM / Assurance">CNAM / Assurance</option><option value="Chèque">Chèque</option></select></div>
         <div class="form-group"><label>Statut</label><select id="pay-status"><option value="En attente">En attente</option><option value="Payé">Payé</option><option value="Partiel">Partiel</option><option value="En retard">En retard</option></select></div>
         <div class="form-group form-full">
           <label>Lignes de facturation</label>
           <div id="pay-items-container" class="pay-items-container"></div>
           <button type="button" class="btn-secondary mt-1" onclick="Payments.addItem()"><i class="fa-solid fa-plus"></i> Ajouter une ligne</button>
         </div>
-        <div class="form-group"><label>Montant versé (€)</label><input type="number" id="pay-paid-amount" min="0" step="0.01" placeholder="0.00" oninput="Payments.updateTotals()"/></div>
+        <div class="form-group"><label>Montant versé (DT)</label><input type="number" id="pay-paid-amount" min="0" step="0.001" placeholder="0,000" oninput="Payments.updateTotals()"/></div>
         <div class="invoice-totals form-full" id="invoice-totals">
-          <div class="total-row"><span>Sous-total</span><span id="inv-subtotal">0,00 €</span></div>
+          <div class="total-row"><span>Sous-total</span><span id="inv-subtotal">0,000 DT</span></div>
           <div class="total-row"><span>Remise</span><span><input type="number" id="inv-discount" min="0" value="0" style="width:60px;border:1px solid var(--border);border-radius:4px;padding:.2rem .4rem" oninput="Payments.updateTotals()"/> %</span></div>
-          <div class="total-row total-grand"><span>Total</span><span id="inv-total">0,00 €</span></div>
-          <div class="total-row"><span>Montant versé</span><span id="inv-paid-display">0,00 €</span></div>
-          <div class="total-row balance"><span><strong>Solde restant</strong></span><span id="inv-balance">0,00 €</span></div>
+          <div class="total-row total-grand"><span>Total</span><span id="inv-total">0,000 DT</span></div>
+          <div class="total-row"><span>Montant versé</span><span id="inv-paid-display">0,000 DT</span></div>
+          <div class="total-row balance"><span><strong>Solde restant</strong></span><span id="inv-balance">0,000 DT</span></div>
         </div>
         <div class="form-group form-full"><label>Notes</label><textarea id="pay-notes" placeholder="Remarques sur cette facture…"></textarea></div>
       </div>
