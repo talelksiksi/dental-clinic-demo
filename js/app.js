@@ -7,6 +7,14 @@
 const COLORS = ['#3d6d78','#2f5a46','#c4805a','#1f2e2f','#5a8f9b','#5f8a6c','#a0674a','#46636a'];
 const colorFor = str => COLORS[(str||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0) % COLORS.length];
 
+/* ── Comptes de démonstration (volontairement publics : l'indice les affiche) ── */
+const USERS = {
+  dentiste:   { password:'sourire', name:'Dr Sarah Mitchell', label:'Dentiste',   initials:'SM', greet:'Docteur',
+                welcome:'Bienvenue Docteur ! Votre fauteuil vous attend (il a l\'air impatient).' },
+  assistante: { password:'molaire', name:'Inès Haddad',       label:'Assistante', initials:'IH', greet:'Inès',
+                welcome:'Bonjour Inès ! Les rapports et réglages sont réservés au dentiste — tout le reste est à vous.' },
+};
+
 /* ══════════════════════════════════════════
    DB — Couche localStorage
 ══════════════════════════════════════════ */
@@ -37,8 +45,14 @@ const DB = {
 /* ══════════════════════════════════════════
    DONNÉES D'EXEMPLE
 ══════════════════════════════════════════ */
+const SEED_VERSION = '3';
+function clearDemoData() {
+  Object.keys(localStorage).filter(k=>k.startsWith('dc_')).forEach(k=>localStorage.removeItem(k));
+}
 function seedData() {
+  if (localStorage.getItem('dc_seed_version')!==SEED_VERSION) clearDemoData();
   if (DB.get('seeded').length) return;
+  localStorage.setItem('dc_seed_version', SEED_VERSION);
 
   DB.set('staff',[
     {id:1,firstName:'Sarah',   lastName:'Mitchell',  role:'Dentiste',             phone:'+213 555 010 001',email:'s.mitchell@dental-clinic.example',license:'CD-10023',exp:12,notes:'Dentisterie cosmétique et Invisalign.'},
@@ -46,17 +60,17 @@ function seedData() {
     {id:3,firstName:'Aïcha',   lastName:'Bensalem',  role:'Chirurgien oral',       phone:'+213 555 010 003',email:'a.bensalem@dental-clinic.example', license:'CD-10067',exp:15,notes:'Implants, extractions, greffes osseuses.'},
     {id:4,firstName:'Yacine',  lastName:'Mahieddine', role:'Endodontiste',         phone:'+213 555 010 004',email:'y.mahieddine@dental-clinic.example',license:'CD-10089',exp:6, notes:'Spécialiste en traitement canalaire.'},
     {id:5,firstName:'Leila',   lastName:'Cherif',    role:'Hygiéniste dentaire',   phone:'+213 555 010 005',email:'l.cherif@dental-clinic.example',   license:'HD-2034', exp:5, notes:'Détartrage, prophylaxie et éducation du patient.'},
-    {id:6,firstName:'Mehdi',   lastName:'Lahrech',   role:'Réceptionniste',        phone:'+213 555 010 006',email:'m.lahrech@dental-clinic.example',  license:'',        exp:3, notes:'Accueil et prise en charge administrative.'},
+    {id:6,firstName:'Inès',    lastName:'Haddad',    role:'Assistante dentaire',   phone:'+213 555 010 006',email:'i.haddad@dental-clinic.example',   license:'',        exp:4, notes:'Accueil, agenda, stérilisation et préparation du fauteuil.'},
   ]);
   localStorage.setItem('dc_id_staff','6');
 
   DB.set('patients',[
     {id:1,firstName:'Amina',   lastName:'Boudjemaa', dob:'1985-03-22',gender:'Féminin',   phone:'+213 555 301 001',email:'amina.b@email.dz',   address:'45 Rue Didouche, Alger',        bloodType:'A+', occupation:'Enseignante', referredBy:'Dr. Benamar',patientSince:'2020-01-15',allergies:'Pénicilline',          medications:'Aucun',          conditions:'Anxiété légère',                     dentalHistory:'Deux obturations en 2019',          smoker:'Non',lastVisit:'2024-11-10',notes:'Préfère les rendez-vous le matin.',emergencyName:'Omar Boudjemaa',   emergencyPhone:'+213 555 901 001',emergencyRelation:'Époux',   emergencyEmail:'',createdAt:'2020-01-15T09:00:00Z'},
-    {id:2,firstName:'Sofiane', lastName:'Meziani',   dob:'1978-07-14',gender:'Masculin',  phone:'+213 555 301 002',email:'s.meziani@email.dz',  address:'12 Bd Krim Belkacem, Oran',     bloodType:'O+', occupation:'Ingénieur',   referredBy:'',           patientSince:'2021-03-10',allergies:'Latex',               medications:'Lisinopril 10mg',conditions:'Hypertension, Diabète type 2',        dentalHistory:'Traitement canalaire #14 en 2020',  smoker:'Non',lastVisit:'2024-12-01',notes:'Vérifier la tension avant les soins.', emergencyName:'Nadia Meziani',    emergencyPhone:'+213 555 901 002',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2021-03-10T10:00:00Z'},
+    {id:2,firstName:'Sofiane', lastName:'Meziani',   dob:'1978-07-14',gender:'Masculin',  phone:'+213 555 301 002',email:'s.meziani@email.dz',  address:'12 Bd Krim Belkacem, Oran',     bloodType:'O+', occupation:'Ingénieur',   referredBy:'',           patientSince:'2021-03-10',allergies:'Latex',               medications:'Lisinopril 10mg',conditions:'Hypertension, Diabète type 2',        dentalHistory:'Traitement canalaire sur la 14 en 2020',  smoker:'Non',lastVisit:'2024-12-01',notes:'Vérifier la tension avant les soins.', emergencyName:'Nadia Meziani',    emergencyPhone:'+213 555 901 002',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2021-03-10T10:00:00Z'},
     {id:3,firstName:'Yasmine', lastName:'Khelifa',   dob:'1995-11-30',gender:'Féminin',   phone:'+213 555 301 003',email:'yasmine.k@email.dz',  address:'88 Cité Universitaire, Constantine',bloodType:'B+',occupation:'Infirmière',referredBy:'Amina Boudjemaa',patientSince:'2022-06-20',allergies:'Aucune',           medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Appareil orthodontique adolescence',smoker:'Non',lastVisit:'2025-01-15',notes:'Très bonne compliance.',                emergencyName:'Hamid Khelifa',    emergencyPhone:'+213 555 901 003',emergencyRelation:'Père',    emergencyEmail:'',createdAt:'2022-06-20T11:00:00Z'},
     {id:4,firstName:'Noureddine',lastName:'Sahraoui',dob:'1962-04-08',gender:'Masculin',  phone:'+213 555 301 004',email:'n.sahraoui@email.dz', address:'33 Rue des Frères Abbas, Annaba',bloodType:'AB+',occupation:'Retraité',  referredBy:'',           patientSince:'2019-09-05',allergies:'Aspirine, Sulfamides', medications:'Warfarine, Metformine, Atorvastatine',conditions:'Cardiopathie, Diabète, Hypertension',dentalHistory:'Plusieurs extractions, prothèse partielle haute',smoker:'Oui',lastVisit:'2024-10-20',notes:'Warfarine — vérifier l\'INR avant extraction.',emergencyName:'Houria Sahraoui',emergencyPhone:'+213 555 901 004',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2019-09-05T08:00:00Z'},
     {id:5,firstName:'Rania',   lastName:'Belhocine', dob:'2001-08-19',gender:'Féminin',   phone:'+213 555 301 005',email:'rania.b@email.dz',    address:'71 Cité Djamel, Skikda',        bloodType:'O-', occupation:'Étudiante',  referredBy:'Yasmine Khelifa',patientSince:'2023-02-14',allergies:'Aucune',           medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Aucun antécédent dentaire',          smoker:'Non',lastVisit:'2025-02-28',notes:'Première patiente, légère anxiété dentaire.',emergencyName:'Samira Belhocine',emergencyPhone:'+213 555 901 005',emergencyRelation:'Mère',    emergencyEmail:'',createdAt:'2023-02-14T14:00:00Z'},
-    {id:6,firstName:'Tarek',   lastName:'Guettafi',  dob:'1970-12-03',gender:'Masculin',  phone:'+213 555 301 006',email:'t.guettafi@email.dz',  address:'19 Rue Mokhtar Khalef, Batna',  bloodType:'A-', occupation:'Comptable',  referredBy:'',           patientSince:'2020-11-22',allergies:'Codéine',             medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Couronne sur #30 en 2021',           smoker:'Non',lastVisit:'2025-01-08',notes:'',emergencyName:'Sabrina Guettafi',emergencyPhone:'+213 555 901 006',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2020-11-22T13:00:00Z'},
+    {id:6,firstName:'Tarek',   lastName:'Guettafi',  dob:'1970-12-03',gender:'Masculin',  phone:'+213 555 301 006',email:'t.guettafi@email.dz',  address:'19 Rue Mokhtar Khalef, Batna',  bloodType:'A-', occupation:'Comptable',  referredBy:'',           patientSince:'2020-11-22',allergies:'Codéine',             medications:'Aucun',          conditions:'Aucune',                             dentalHistory:'Couronne sur la 46 en 2021',           smoker:'Non',lastVisit:'2025-01-08',notes:'',emergencyName:'Sabrina Guettafi',emergencyPhone:'+213 555 901 006',emergencyRelation:'Épouse',  emergencyEmail:'',createdAt:'2020-11-22T13:00:00Z'},
   ]);
   localStorage.setItem('dc_id_patients','6');
 
@@ -68,11 +82,11 @@ function seedData() {
 
   DB.set('appointments',[
     {id:1,patientId:1,dentistId:1,date:td,       time:'09:00',duration:30, service:'Bilan & Détartrage',           status:'Confirmé',  notes:'Bilan annuel',                         reminder:'1day',  createdAt:new Date().toISOString()},
-    {id:2,patientId:2,dentistId:4,date:td,       time:'10:30',duration:60, service:'Traitement canalaire',          status:'En cours',  notes:'Dent #19, 2ème séance',                reminder:'none',  createdAt:new Date().toISOString()},
-    {id:3,patientId:3,dentistId:1,date:td,       time:'14:00',duration:45, service:'Obturation composite',          status:'Planifié',  notes:'Carie sur #12',                        reminder:'2hours',createdAt:new Date().toISOString()},
-    {id:4,patientId:4,dentistId:3,date:td,       time:'15:30',duration:90, service:'Extraction dentaire',           status:'Planifié',  notes:'Extraction #16 — vérifier Warfarine',  reminder:'1day',  createdAt:new Date().toISOString()},
+    {id:2,patientId:2,dentistId:4,date:td,       time:'10:30',duration:60, service:'Traitement canalaire',          status:'En cours',  notes:'Dent 36, 2ème séance',                reminder:'none',  createdAt:new Date().toISOString()},
+    {id:3,patientId:3,dentistId:1,date:td,       time:'14:00',duration:45, service:'Obturation composite',          status:'Planifié',  notes:'Carie sur 12',                        reminder:'2hours',createdAt:new Date().toISOString()},
+    {id:4,patientId:4,dentistId:3,date:td,       time:'15:30',duration:90, service:'Extraction dentaire',           status:'Planifié',  notes:'Extraction 16 — vérifier Warfarine',  reminder:'1day',  createdAt:new Date().toISOString()},
     {id:5,patientId:5,dentistId:5,date:tomorrow, time:'09:30',duration:30, service:'Bilan & Détartrage',            status:'Planifié',  notes:'Première séance de détartrage',         reminder:'1day',  createdAt:new Date().toISOString()},
-    {id:6,patientId:6,dentistId:1,date:tomorrow, time:'11:00',duration:45, service:'Pose de couronne',               status:'Confirmé',  notes:'Couronne définitive sur #30',           reminder:'2hours',createdAt:new Date().toISOString()},
+    {id:6,patientId:6,dentistId:1,date:tomorrow, time:'11:00',duration:45, service:'Pose de couronne',               status:'Confirmé',  notes:'Couronne définitive sur 46',           reminder:'2hours',createdAt:new Date().toISOString()},
     {id:7,patientId:1,dentistId:2,date:yesterday,time:'10:00',duration:60, service:'Consultation orthodontique',    status:'Terminé',   notes:'Discussion Invisalign',                 reminder:'none',  createdAt:new Date().toISOString()},
     {id:8,patientId:2,dentistId:4,date:yesterday,time:'14:30',duration:60, service:'Traitement canalaire',          status:'Terminé',   notes:'1ère séance',                           reminder:'none',  createdAt:new Date().toISOString()},
   ]);
@@ -80,22 +94,39 @@ function seedData() {
 
   DB.set('treatments',[
     {id:1,patientId:1,dentistId:5,date:yesterday,    teeth:['11','12','21','22','31','41'],procedure:'Détartrage & Polissage',  description:'Prophylaxie complète, tartre léger',                   notes:'Bonne hygiène bucco-dentaire.',               followup:'Brossage 2x/jour, fil dentaire 1x/jour.',       cost:120, status:'Terminé',  createdAt:new Date().toISOString()},
-    {id:2,patientId:2,dentistId:4,date:yesterday,    teeth:['19'],           procedure:'Traitement canalaire',    description:'Préparation biomécanique et obturation de la #19',     notes:'3 canaux. Patient bien toléré.',               followup:'Ibuprofène 400mg si douleur. Retour dans 2 sem.', cost:9500,status:'En cours', createdAt:new Date().toISOString()},
+    {id:2,patientId:2,dentistId:4,date:yesterday,    teeth:['36'],           procedure:'Traitement canalaire',    description:'Préparation biomécanique et obturation de la 36',     notes:'3 canaux. Patient bien toléré.',               followup:'Ibuprofène 400mg si douleur. Retour dans 2 sem.', cost:9500,status:'En cours', createdAt:new Date().toISOString()},
     {id:3,patientId:3,dentistId:1,date:fmt(new Date(today.getTime()-7*86400000)),  teeth:['12'],procedure:'Obturation composite',  description:'Restauration composite classe II',                     notes:'Carie MO, teinte A2.',                         followup:'Éviter les aliments durs pendant 24h.',          cost:1800,status:'Terminé',  createdAt:new Date().toISOString()},
-    {id:4,patientId:6,dentistId:1,date:fmt(new Date(today.getTime()-14*86400000)), teeth:['30'],procedure:'Préparation de couronne',description:'Préparation couronne céramique intégrale, temporaire posée',notes:'Préparation sous digue. Temporaire collée.',followup:'Éviter les aliments collants. Retour dans 2 sem.',cost:7500,status:'Terminé',  createdAt:new Date().toISOString()},
-    {id:5,patientId:4,dentistId:3,date:fmt(new Date(today.getTime()-30*86400000)), teeth:['14','15'],procedure:'Extraction chirurgicale',description:'Extraction chirurgicale #14 et #15',               notes:'INR 2,1 — dans les limites. Hémostase obtenue.',followup:'Compresse 30 min. Alimentation molle 3 j. Amoxicilline 500mg x7.',cost:4200,status:'Terminé',createdAt:new Date().toISOString()},
+    {id:4,patientId:6,dentistId:1,date:fmt(new Date(today.getTime()-14*86400000)), teeth:['46'],procedure:'Préparation de couronne',description:'Préparation couronne céramique intégrale, temporaire posée',notes:'Préparation sous digue. Temporaire collée.',followup:'Éviter les aliments collants. Retour dans 2 sem.',cost:7500,status:'Terminé',  createdAt:new Date().toISOString()},
+    {id:5,patientId:4,dentistId:3,date:fmt(new Date(today.getTime()-30*86400000)), teeth:['14','15'],procedure:'Extraction chirurgicale',description:'Extraction chirurgicale 14 et 15',               notes:'INR 2,1 — dans les limites. Hémostase obtenue.',followup:'Compresse 30 min. Alimentation molle 3 j. Amoxicilline 500mg x7.',cost:4200,status:'Terminé',createdAt:new Date().toISOString()},
   ]);
   localStorage.setItem('dc_id_treatments','5');
 
   DB.set('payments',[
     {id:1,patientId:1,date:yesterday,   dueDate:'',method:'Espèces',        status:'Payé',       paidAmount:120,  discount:0,notes:'',invoiceNumber:'FAC-001',items:[{description:'Détartrage & Polissage',amount:120}],  createdAt:new Date().toISOString()},
     {id:2,patientId:2,date:yesterday,   dueDate:fmt(new Date(today.getTime()+14*86400000)),method:'Assurance',status:'Partiel',paidAmount:5000,discount:0,notes:'Dossier assurance soumis.',invoiceNumber:'FAC-002',items:[{description:'Traitement canalaire - Séance 1',amount:9500}],createdAt:new Date().toISOString()},
-    {id:3,patientId:3,date:fmt(new Date(today.getTime()-7*86400000)), dueDate:'',method:'Espèces', status:'Payé',paidAmount:1800,discount:0,notes:'',invoiceNumber:'FAC-003',items:[{description:'Obturation composite #12',amount:1800}],createdAt:new Date().toISOString()},
+    {id:3,patientId:3,date:fmt(new Date(today.getTime()-7*86400000)), dueDate:'',method:'Espèces', status:'Payé',paidAmount:1800,discount:0,notes:'',invoiceNumber:'FAC-003',items:[{description:'Obturation composite 12',amount:1800}],createdAt:new Date().toISOString()},
     {id:4,patientId:6,date:fmt(new Date(today.getTime()-14*86400000)),dueDate:td,method:'Carte de débit',status:'Partiel',paidAmount:4000,discount:5,notes:'Solde dû à la pose de couronne.',invoiceNumber:'FAC-004',items:[{description:'Préparation couronne',amount:7500},{description:'Couronne provisoire',amount:800}],createdAt:new Date().toISOString()},
-    {id:5,patientId:4,date:fmt(new Date(today.getTime()-30*86400000)),dueDate:'',method:'Espèces',status:'Payé',paidAmount:4200,discount:0,notes:'',invoiceNumber:'FAC-005',items:[{description:'Extraction chirurgicale #14',amount:2100},{description:'Extraction chirurgicale #15',amount:2100}],createdAt:new Date().toISOString()},
+    {id:5,patientId:4,date:fmt(new Date(today.getTime()-30*86400000)),dueDate:'',method:'Espèces',status:'Payé',paidAmount:4200,discount:0,notes:'',invoiceNumber:'FAC-005',items:[{description:'Extraction chirurgicale 14',amount:2100},{description:'Extraction chirurgicale 15',amount:2100}],createdAt:new Date().toISOString()},
   ]);
   localStorage.setItem('dc_id_payments','5');
   localStorage.setItem('dc_id_invoices','5');
+
+  // États dentaires saisis manuellement (en plus de ceux déduits des soins)
+  localStorage.setItem('dc_chart', JSON.stringify({
+    1:{ '26':{state:'caries',note:'Carie occlusale débutante, à surveiller.'}, '37':{state:'filled',note:'Ancienne obturation (2019).'} },
+    2:{ '47':{state:'filled',note:''} },
+    4:{ '24':{state:'extracted',note:'Remplacée par prothèse partielle.'}, '25':{state:'extracted',note:''}, '36':{state:'crown',note:''} },
+    6:{ '17':{state:'filled',note:''}, '27':{state:'caries',note:'Proposer obturation au prochain RDV.'} },
+  }));
+
+  const ago = m => new Date(Date.now()-m*60000).toISOString();
+  DB.set('activity',[
+    {type:'appt',     text:'RDV de Sofiane Meziani : statut → En cours', time:ago(12)},
+    {type:'payment',  text:'Facture FAC-004 : acompte de 4 000,00 € reçu', time:ago(95)},
+    {type:'treatment',text:'Détartrage & Polissage effectué sur Amina Boudjemaa', time:ago(60*20)},
+    {type:'patient',  text:'Nouvelle patiente enregistrée : Rania Belhocine', time:ago(60*26)},
+    {type:'appt',     text:'Nouveau RDV pour Tarek Guettafi demain à 11:00', time:ago(60*30)},
+  ]);
 
   DB.set('seeded',[true]);
 }
@@ -158,39 +189,144 @@ const App = {
     this._bindMobileMenu();
     this._bindModalTabs();
     this._bindPatientDetailTabs();
+    this._bindNotifications();
+    document.addEventListener('keydown',e=>{
+      if (e.key!=='Escape') return;
+      document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+      document.getElementById('modal-overlay').classList.add('hidden');
+      document.getElementById('notif-panel').classList.add('hidden');
+      document.getElementById('hint-bubble').classList.add('hidden');
+    });
     document.getElementById('topbar-date').textContent =
       new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    this.applyClinicName();
+    // Session conservée pendant l'onglet (rechargement de page)
+    let saved=null; try { saved=sessionStorage.getItem('dc_session'); } catch {}
+    if (saved && USERS[saved]) this._login(saved);
   },
 
+  role: null,
+
   _bindLogin() {
+    const userInp=document.getElementById('login-user');
+    const passInp=document.getElementById('login-pass');
+    const err=document.getElementById('login-error');
+    const setRole=r=>{
+      document.querySelectorAll('.role-btn').forEach(b=>b.classList.toggle('active',b.dataset.role===r));
+      userInp.placeholder=r;
+    };
     document.querySelectorAll('.role-btn').forEach(btn=>btn.addEventListener('click',()=>{
-      document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
+      setRole(btn.dataset.role);
+      if (!userInp.value || USERS[userInp.value.trim().toLowerCase()]) userInp.value=btn.dataset.role;
+      passInp.focus();
+    }));
+    userInp.addEventListener('input',()=>{ const u=userInp.value.trim().toLowerCase(); if (USERS[u]) setRole(u); });
+    document.getElementById('hint-btn').addEventListener('click',e=>{
+      e.stopPropagation();
+      document.getElementById('hint-bubble').classList.toggle('hidden');
+    });
+    document.querySelectorAll('.hint-fill').forEach(b=>b.addEventListener('click',()=>{
+      userInp.value=b.dataset.u; passInp.value=b.dataset.p; setRole(b.dataset.r);
+      document.getElementById('hint-bubble').classList.add('hidden');
+      err.classList.add('hidden');
     }));
     document.getElementById('login-form').addEventListener('submit',e=>{
       e.preventDefault();
-      const role = document.querySelector('.role-btn.active')?.dataset.role||'admin';
-      const user = document.getElementById('login-user').value||'Admin';
-      this._login(user,role);
+      const u=userInp.value.trim().toLowerCase();
+      const p=passInp.value;
+      const card=document.querySelector('.login-card');
+      if (!USERS[u] || USERS[u].password!==p) {
+        const jokes=[
+          'Identifiants incorrects. Même la fraise du dentiste ne passerait pas.',
+          'Raté ! Essayez l\'ampoule à côté du mot de passe 💡',
+          'Accès refusé. Ouvrez grand… vos yeux, et relisez l\'indice.',
+        ];
+        err.textContent=!USERS[u]?'Seuls « dentiste » et « assistante » ont les clés du cabinet.':jokes[Math.floor(Math.random()*jokes.length)];
+        err.classList.remove('hidden');
+        card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+        return;
+      }
+      err.classList.add('hidden');
+      passInp.value='';
+      this._login(u);
     });
+    document.getElementById('logout-btn').addEventListener('click',()=>this.logout());
   },
 
-  _login(username, role) {
+  _login(username) {
+    const user=USERS[username]; if (!user) return;
+    this.role=username;
+    try { sessionStorage.setItem('dc_session',username); } catch {}
+    document.body.classList.toggle('role-assistante', username==='assistante');
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').classList.remove('hidden');
-    const name = username.charAt(0).toUpperCase()+username.slice(1);
-    document.getElementById('sidebar-user-name').textContent = name;
-    document.getElementById('sidebar-user-role').textContent = ({admin:'Administrateur',dentist:'Dentiste',receptionist:'Réceptionniste'})[role]||role;
-    document.getElementById('sidebar-avatar').textContent = name[0].toUpperCase();
-    document.getElementById('greeting-name').textContent = name;
+    document.getElementById('sidebar-user-name').textContent = user.name;
+    document.getElementById('sidebar-user-role').textContent = user.label;
+    document.getElementById('sidebar-avatar').textContent = user.initials;
+    document.getElementById('greeting-name').textContent = user.greet;
     const h = new Date().getHours();
-    document.getElementById('greeting-time').textContent = h<12?'Bonjour':h<17?'Bon après-midi':'Bonsoir';
-    document.getElementById('logout-btn').addEventListener('click',()=>{
-      document.getElementById('login-screen').style.display='';
-      document.getElementById('app').classList.add('hidden');
-    });
+    document.getElementById('greeting-time').textContent = h<12?'Bonjour':h<18?'Bon après-midi':'Bonsoir';
     this.navigate('dashboard');
     this.updateBadges();
+    if (!this._welcomed) { this._welcomed=true; setTimeout(()=>this.toast(user.welcome,'info'),400); }
+  },
+
+  logout() {
+    try { sessionStorage.removeItem('dc_session'); } catch {}
+    this.role=null; this._welcomed=false;
+    document.body.classList.remove('role-assistante');
+    document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
+    document.getElementById('modal-overlay').classList.add('hidden');
+    document.getElementById('notif-panel').classList.add('hidden');
+    document.getElementById('login-screen').style.display='';
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('login-pass').value='';
+  },
+
+  can(page) { return this.role!=='assistante' || !['reports','staff','settings'].includes(page); },
+
+  applyClinicName() {
+    const n=DB.settings().clinicName||'Dental Clinic';
+    const el=document.querySelector('.logo-title'); if (el) el.textContent=n;
+  },
+
+  _notifRead: false,
+  _bindNotifications() {
+    const btn=document.getElementById('notif-btn');
+    const panel=document.getElementById('notif-panel');
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const opening=panel.classList.contains('hidden');
+      if (opening) this._renderNotifications();
+      panel.classList.toggle('hidden');
+      if (opening) { this._notifRead=true; document.getElementById('notif-dot').classList.remove('visible'); }
+    });
+    panel.addEventListener('click',e=>e.stopPropagation());
+    document.addEventListener('click',e=>{
+      panel.classList.add('hidden');
+      if (!e.target.closest('#hint-bubble') && !e.target.closest('#hint-btn')) document.getElementById('hint-bubble').classList.add('hidden');
+    });
+  },
+  _renderNotifications() {
+    const today=Utils.today();
+    const tomorrow=new Date(Date.now()+86400000).toISOString().split('T')[0];
+    const appts=DB.appointments();
+    const nToday=appts.filter(a=>a.date===today&&!['Annulé','Absent','Terminé'].includes(a.status)).length;
+    const nTomorrow=appts.filter(a=>a.date===tomorrow&&!['Annulé','Absent'].includes(a.status)).length;
+    const unpaid=DB.payments().filter(p=>['En attente','Partiel','En retard'].includes(p.status)).length;
+    const funny=[
+      {icon:'fa-face-grin-squint-tears',title:'Vous nous avez eus ! 😄',text:'Ce point rouge ne voulait rien dire. Il voulait juste un peu d\'attention.'},
+      {icon:'fa-tooth',title:'Une dent de sagesse a demandé une augmentation',text:'Elle estime être la plus sage du cabinet. Dossier transmis au service RH.'},
+      {icon:'fa-mug-hot',title:'Le café de la salle de pause est vide',text:'Statut : urgence absolue. Priorité supérieure à une rage de dents.'},
+      {icon:'fa-hand-sparkles',title:'Rappel : le fil dentaire existe',text:'92 % de vos patients jurent l\'utiliser. Les 8 % restants sont honnêtes.'},
+    ];
+    const pick=[funny[0], funny.slice(1)[Math.floor(Math.random()*(funny.length-1))]];
+    document.getElementById('notif-panel').innerHTML=`
+      <div class="notif-head"><strong>Notifications</strong><span class="text-muted">${this._notifRead?'Tout est lu':'Nouveau'}</span></div>
+      ${pick.map(n=>`<div class="notif-item fun"><i class="fa-solid ${n.icon}"></i><div><strong>${n.title}</strong><p>${n.text}</p></div></div>`).join('')}
+      <div class="notif-item" onclick="App.navigate('appointments');Appointments.filterToday();document.getElementById('notif-panel').classList.add('hidden')"><i class="fa-solid fa-calendar-check"></i><div><strong>${nToday} rendez-vous à venir aujourd'hui</strong><p>Voir le planning du jour</p></div></div>
+      <div class="notif-item" onclick="Appointments.remindTomorrow();document.getElementById('notif-panel').classList.add('hidden')"><i class="fa-brands fa-whatsapp"></i><div><strong>${nTomorrow} patient${nTomorrow>1?'s':''} à rappeler pour demain</strong><p>Envoyer les rappels en un clic</p></div></div>
+      <div class="notif-item" onclick="App.navigate('payments');document.getElementById('notif-panel').classList.add('hidden')"><i class="fa-solid fa-file-invoice-dollar"></i><div><strong>${unpaid} facture${unpaid>1?'s':''} non soldée${unpaid>1?'s':''}</strong><p>Voir les paiements</p></div></div>`;
   },
 
   _bindNav() {
@@ -236,15 +372,19 @@ const App = {
       if (!btn) return;
       const wrap = btn.closest('.patient-detail-main');
       if (!wrap) return;
-      wrap.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-      wrap.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab)?.classList.add('active');
+      this.showDetailTab(btn.dataset.tab);
     });
   },
 
+  showDetailTab(id) {
+    document.querySelectorAll('.patient-detail-main .tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+    document.querySelectorAll('.patient-detail-main .tab-content').forEach(c=>c.classList.toggle('active',c.id===id));
+  },
+
   navigate(page) {
+    if (!this.can(page)) { this.toast('Section réservée au dentiste. Bien essayé 😉','warning'); return; }
     this.currentPage = page;
+    window.scrollTo(0,0);
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById('page-'+page)?.classList.add('active');
     document.querySelectorAll('.nav-item[data-page]').forEach(n=>n.classList.remove('active'));
@@ -266,17 +406,9 @@ const App = {
     if (page==='reports')      Reports.render();
     if (page==='staff')        Staff.render();
     if (page==='settings')     Settings.render();
-    if (page==='dental-chart') DentalChart.init();
   },
 
   openModal(id) {
-    if (id==='modal-add-appointment') Appointments.populateFilters();
-    if (id==='modal-add-treatment')   Treatments.populateFilters();
-    if (id==='modal-add-payment') {
-      const pSel=document.getElementById('pay-patient-id');
-      if (pSel) pSel.innerHTML='<option value="">— Sélectionner un patient —</option>'+
-        DB.patients().map(p=>`<option value="${p.id}">${p.firstName} ${p.lastName}</option>`).join('');
-    }
     document.getElementById('modal-overlay').classList.remove('hidden');
     document.querySelectorAll('.modal').forEach(m=>m.style.display='none');
     const el = document.getElementById(id);
@@ -311,13 +443,26 @@ const App = {
     document.getElementById('nav-badge-appts').textContent    = a.filter(x=>x.date===Utils.today()&&!['Annulé','Absent','Terminé'].includes(x.status)).length;
     const pend = pa.filter(x=>['En attente','Partiel','En retard'].includes(x.status));
     document.getElementById('nav-badge-pending').textContent  = pend.length;
-    document.getElementById('notif-dot').classList.toggle('visible', pend.length>0);
+    document.getElementById('notif-dot').classList.toggle('visible', !this._notifRead);
   },
 
-  openPatient(id) {
+  openPatient(id, tab) {
     this.currentPatientId = id;
     this.navigate('patient-detail');
     Patients.renderDetail(id);
+    this.showDetailTab(tab||'detail-chart');
+  },
+
+  refreshCurrent() {
+    const p=this.currentPage;
+    if (p==='patient-detail' && this.currentPatientId) Patients.renderDetail(this.currentPatientId);
+    else if (p==='appointments') { Appointments._renderStatusBar(DB.appointments()); Appointments.filter(); }
+    else if (p==='treatments') Treatments.filter();
+    else if (p==='payments') { Payments.render(); Payments.filter(); }
+    else if (p==='patients') Patients.filter();
+    else if (p==='dashboard') Dashboard.render();
+    else if (p==='staff') Staff.render();
+    this.updateBadges();
   },
 
   toast(msg,type='success') {
@@ -373,7 +518,7 @@ const Dashboard = {
     const el = document.getElementById('today-schedule-list');
     const dotColor={Planifié:'#94a3b8',Confirmé:'#10b981','En cours':'#f59e0b',Terminé:'#059669',Annulé:'#ef4444',Absent:'#9ca3af'};
     el.innerHTML = todayAppts.length ? todayAppts.map(a=>`
-      <div class="schedule-item" onclick="App.navigate('appointments')">
+      <div class="schedule-item" onclick="App.openPatient(${a.patientId},'detail-appointments')" title="Ouvrir le dossier">
         <div class="schedule-time">${a.time}</div>
         <div class="schedule-dot" style="background:${dotColor[a.status]||'#94a3b8'}"></div>
         <div class="schedule-info">
@@ -402,12 +547,18 @@ const Dashboard = {
     App.updateBadges();
   },
 
+  period: 6,
+  setPeriod(n, btn) {
+    this.period=n;
+    document.querySelectorAll('.chart-period-tabs .tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+    this._renderRevenueChart(DB.payments());
+  },
   _renderRevenueChart(payments) {
     const months=[],revs=[];
-    for (let i=5;i>=0;i--) {
-      const d=new Date(); d.setMonth(d.getMonth()-i);
+    for (let i=this.period-1;i>=0;i--) {
+      const d=new Date(); d.setDate(1); d.setMonth(d.getMonth()-i);
       const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-      months.push(d.toLocaleDateString('fr-FR',{month:'short'}));
+      months.push(d.toLocaleDateString('fr-FR',this.period>6?{month:'short',year:'2-digit'}:{month:'short'}));
       revs.push(payments.filter(p=>p.date&&p.date.startsWith(k)&&p.status!=='En attente').reduce((s,p)=>s+parseFloat(p.paidAmount||0),0));
     }
     const ctx=document.getElementById('revenue-chart')?.getContext('2d');
@@ -528,6 +679,11 @@ const Patients = {
     App.openModal('modal-add-patient');
   },
   editCurrent() { if (App.currentPatientId) this.edit(App.currentPatientId); },
+  openNew() {
+    this._clearForm();
+    document.getElementById('modal-patient-title').innerHTML='<i class="fa-solid fa-user-plus"></i> Ajouter un patient';
+    App.openModal('modal-add-patient');
+  },
   save() {
     const fn=document.getElementById('p-first-name').value.trim();
     const ln=document.getElementById('p-last-name').value.trim();
@@ -543,26 +699,36 @@ const Patients = {
       DB.savePatients(patients);
       DB.logActivity('patient',`Dossier modifié : ${fn} ${ln}`);
       App.toast('Patient modifié avec succès');
+      App.closeModal('modal-add-patient');
+      App.refreshCurrent();
     } else {
       const id=DB.nextId('patients');
       patients.push({id,...data,createdAt:new Date().toISOString()});
       DB.savePatients(patients);
       DB.logActivity('patient',`Nouveau patient enregistré : ${fn} ${ln}`);
-      App.toast('Patient ajouté avec succès');
+      App.toast('Patient ajouté — son dossier est ouvert');
+      App.closeModal('modal-add-patient');
+      App.openPatient(id);
     }
-    App.closeModal('modal-add-patient');
-    this.render(); App.updateBadges();
+    App.updateBadges();
   },
   delete(id) {
     const p=DB.patients().find(x=>x.id==id);
     if (!p) return;
-    App.confirmDelete(`Supprimer le patient "${p.firstName} ${p.lastName}" ?`,()=>{
+    App.confirmDelete(`Supprimer le patient "${p.firstName} ${p.lastName}" ainsi que ses rendez-vous, soins, factures et fichiers ?`,()=>{
       DB.savePatients(DB.patients().filter(x=>x.id!=id));
+      DB.saveAppointments(DB.appointments().filter(x=>x.patientId!=id));
+      DB.saveTreatments(DB.treatments().filter(x=>x.patientId!=id));
+      DB.savePayments(DB.payments().filter(x=>x.patientId!=id));
+      const ch=DentalChart.all(); delete ch[id]; DentalChart.saveAll(ch);
+      Files.removeForPatient(id);
       DB.logActivity('patient',`Patient supprimé : ${p.firstName} ${p.lastName}`);
       App.toast('Patient supprimé','warning');
-      this.render(); App.updateBadges();
+      if (App.currentPage==='patient-detail') App.navigate('patients'); else this.render();
+      App.updateBadges();
     });
   },
+  deleteCurrent() { if (App.currentPatientId) this.delete(App.currentPatientId); },
   renderDetail(id) {
     const p=DB.patients().find(x=>x.id==id); if (!p) return;
     const c=colorFor(p.firstName);
@@ -580,26 +746,20 @@ const Patients = {
 
     const appts=DB.appointments().filter(a=>a.patientId==id).sort((a,b)=>b.date.localeCompare(a.date));
     document.getElementById('detail-appt-count').textContent=`${appts.length} rendez-vous`;
-    document.getElementById('detail-appointments-list').innerHTML=appts.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Heure</th><th>Soin</th><th>Dentiste</th><th>Statut</th></tr></thead><tbody>${appts.map(a=>`<tr><td>${Utils.formatDate(a.date)}</td><td>${a.time}</td><td>${a.service}</td><td>${Utils.dentistName(a.dentistId)}</td><td>${Utils.statusBadge(a.status)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty-state-sm"><i class="fa-solid fa-calendar-xmark"></i> Aucun rendez-vous</div>';
+    document.getElementById('detail-appointments-list').innerHTML=appts.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Heure</th><th>Soin</th><th>Dentiste</th><th>Statut</th></tr></thead><tbody>${appts.map(a=>`<tr class="row-link" onclick="Appointments.edit(${a.id})" title="Modifier"><td>${Utils.formatDate(a.date)}</td><td>${a.time}</td><td>${a.service}</td><td>${Utils.dentistName(a.dentistId)}</td><td>${Utils.statusBadge(a.status)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty-state-sm"><i class="fa-solid fa-calendar-xmark"></i> Aucun rendez-vous</div>';
 
     const treats=DB.treatments().filter(t=>t.patientId==id).sort((a,b)=>b.date.localeCompare(a.date));
     document.getElementById('detail-treat-count').textContent=`${treats.length} soin${treats.length!==1?'s':''}`;
-    document.getElementById('detail-treatments-list').innerHTML=treats.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Acte</th><th>Dents</th><th>Dentiste</th><th>Coût</th><th>Statut</th></tr></thead><tbody>${treats.map(t=>`<tr><td>${Utils.formatDate(t.date)}</td><td>${t.procedure}</td><td>${(t.teeth||[]).join(', ')||'—'}</td><td>${Utils.dentistName(t.dentistId)}</td><td>${Utils.currency(t.cost)}</td><td>${Utils.statusBadge(t.status)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty-state-sm"><i class="fa-solid fa-kit-medical"></i> Aucun soin enregistré</div>';
+    document.getElementById('detail-treatments-list').innerHTML=treats.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Date</th><th>Acte</th><th>Dents</th><th>Dentiste</th><th>Coût</th><th>Statut</th></tr></thead><tbody>${treats.map(t=>`<tr class="row-link" onclick="Treatments.edit(${t.id})" title="Modifier"><td>${Utils.formatDate(t.date)}</td><td>${t.procedure}</td><td>${(t.teeth||[]).join(', ')||'—'}</td><td>${Utils.dentistName(t.dentistId)}</td><td>${Utils.currency(t.cost)}</td><td>${Utils.statusBadge(t.status)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty-state-sm"><i class="fa-solid fa-kit-medical"></i> Aucun soin enregistré</div>';
 
     const pays=DB.payments().filter(pay=>pay.patientId==id).sort((a,b)=>b.date.localeCompare(a.date));
     const totalPaid=pays.reduce((s,pay)=>s+parseFloat(pay.paidAmount||0),0);
     document.getElementById('detail-pay-count').textContent=Utils.currency(totalPaid)+' versé';
-    document.getElementById('detail-payments-list').innerHTML=pays.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Facture</th><th>Date</th><th>Total</th><th>Versé</th><th>Mode</th><th>Statut</th><th></th></tr></thead><tbody>${pays.map(pay=>{const total=pay.items.reduce((s,i)=>s+parseFloat(i.amount||0),0)*(1-(pay.discount||0)/100);return`<tr><td>${pay.invoiceNumber}</td><td>${Utils.formatDate(pay.date)}</td><td>${Utils.currency(total)}</td><td>${Utils.currency(pay.paidAmount)}</td><td>${pay.method}</td><td>${Utils.statusBadge(pay.status)}</td><td><button class="icon-btn view" onclick="Payments.printInvoice(${pay.id})"><i class="fa-solid fa-eye"></i></button></td></tr>`;}).join('')}</tbody></table></div>`:'<div class="empty-state-sm"><i class="fa-solid fa-file-invoice-dollar"></i> Aucune facture</div>';
+    document.getElementById('detail-payments-list').innerHTML=pays.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Facture</th><th>Date</th><th>Total</th><th>Versé</th><th>Mode</th><th>Statut</th><th></th></tr></thead><tbody>${pays.map(pay=>{const total=pay.items.reduce((s,i)=>s+parseFloat(i.amount||0),0)*(1-(pay.discount||0)/100);return`<tr><td>${pay.invoiceNumber}</td><td>${Utils.formatDate(pay.date)}</td><td>${Utils.currency(total)}</td><td>${Utils.currency(pay.paidAmount)}</td><td>${pay.method}</td><td>${Utils.statusBadge(pay.status)}</td><td><div class="table-actions"><button class="icon-btn view" onclick="Payments.printInvoice(${pay.id})" title="Voir"><i class="fa-solid fa-eye"></i></button><button class="icon-btn edit" onclick="Payments.edit(${pay.id})" title="Modifier"><i class="fa-solid fa-pen"></i></button></div></td></tr>`;}).join('')}</tbody></table></div>`:'<div class="empty-state-sm"><i class="fa-solid fa-file-invoice-dollar"></i> Aucune facture</div>';
 
-    document.getElementById('detail-files-list').innerHTML=`
-      <div class="file-card"><i class="fa-solid fa-x-ray"></i><p>Radio panoramique</p><small>10/11/2024</small></div>
-      <div class="file-card"><i class="fa-solid fa-file-pdf"></i><p>Plan de traitement</p><small>10/11/2024</small></div>`;
-  },
-  prefillAppointment() {
-    if (App.currentPatientId) { const s=document.getElementById('appt-patient-id'); if(s) s.value=App.currentPatientId; }
-    App.openModal('modal-add-appointment');
-  },
-  addFile() { App.toast('Téléversement de fichier — bientôt disponible','info'); }
+    DentalChart.render(id);
+    Files.render(id);
+  }
 };
 
 /* ══════════════════════════════════════════
@@ -623,7 +783,50 @@ const Appointments = {
     const dOpts='<option value="">— Sélectionner —</option>'+dentists.map(d=>`<option value="${d.id}">Dr ${d.firstName} ${d.lastName} (${d.role})</option>`).join('');
     const ds=document.getElementById('appt-dentist-id'); if(ds) ds.innerHTML=dOpts;
     const df=document.getElementById('appt-filter-dentist'); if(df) df.innerHTML='<option value="">Tous les dentistes</option>'+dentists.map(d=>`<option value="${d.id}">Dr ${d.firstName} ${d.lastName}</option>`).join('');
-    const ss=document.getElementById('appt-service'); if(ss) ss.innerHTML='<option value="">— Sélectionner —</option>'+SERVICES_FR.map(s=>`<option>${s}</option>`).join('');
+    const svcNames=[...new Set([...(DB.settings().services||[]).map(s=>s.name),...SERVICES_FR])];
+    const ss=document.getElementById('appt-service'); if(ss) ss.innerHTML='<option value="">— Sélectionner —</option>'+svcNames.map(s=>`<option>${s}</option>`).join('');
+  },
+  openNew(prefill={}) {
+    this.populateFilters();
+    document.getElementById('modal-appt-title').innerHTML='<i class="fa-solid fa-calendar-plus"></i> Nouveau rendez-vous';
+    document.getElementById('appt-edit-id').value='';
+    const next=new Date(); next.setMinutes(0,0,0); next.setHours(Math.min(Math.max(next.getHours()+1,8),17));
+    const v={patientId:'',dentistId:'',service:'',date:Utils.today(),time:next.toTimeString().slice(0,5),duration:30,status:'Planifié',reminder:'1day',notes:'',...prefill};
+    if (!v.dentistId && App.role==='dentiste') v.dentistId=1;
+    this._fill(v);
+    App.openModal('modal-add-appointment');
+  },
+  _fill(a) {
+    document.getElementById('appt-patient-id').value=a.patientId||'';
+    document.getElementById('appt-dentist-id').value=a.dentistId||'';
+    document.getElementById('appt-service').value=a.service||'';
+    document.getElementById('appt-date').value=a.date||'';
+    document.getElementById('appt-time').value=a.time||'';
+    document.getElementById('appt-duration').value=a.duration||30;
+    document.getElementById('appt-status').value=a.status||'Planifié';
+    document.getElementById('appt-reminder').value=a.reminder||'none';
+    document.getElementById('appt-notes').value=a.notes||'';
+  },
+  remind(id) {
+    const a=DB.appointments().find(x=>x.id==id); if(!a) return;
+    const p=DB.patients().find(x=>x.id==a.patientId);
+    const appts=DB.appointments(); const i=appts.findIndex(x=>x.id==id);
+    appts[i].reminderSent=new Date().toISOString(); DB.saveAppointments(appts);
+    DB.logActivity('appt',`Rappel WhatsApp envoyé à ${Utils.patientName(a.patientId)}`);
+    App.toast(`Rappel envoyé à ${p?p.firstName:'le patient'} : « RDV le ${Utils.formatDate(a.date)} à ${a.time} » (simulation)`,'success');
+    App.refreshCurrent();
+  },
+  remindTomorrow() {
+    const tomorrow=new Date(Date.now()+86400000).toISOString().split('T')[0];
+    const appts=DB.appointments();
+    const list=appts.filter(a=>a.date===tomorrow&&!['Annulé','Absent'].includes(a.status));
+    if (!list.length) { App.toast('Personne à rappeler pour demain. Journée tranquille ☕','info'); return; }
+    const now=new Date().toISOString();
+    list.forEach(a=>{ a.reminderSent=now; });
+    DB.saveAppointments(appts);
+    DB.logActivity('appt',`${list.length} rappel${list.length>1?'s':''} WhatsApp envoyé${list.length>1?'s':''} pour demain`);
+    App.toast(`${list.length} rappel${list.length>1?'s':''} WhatsApp envoyé${list.length>1?'s':''} : ${list.map(a=>Utils.patientName(a.patientId).split(' ')[0]).join(', ')} (simulation)`);
+    App.refreshCurrent();
   },
   render() { this._renderTable(DB.appointments().sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time))); this._renderStatusBar(DB.appointments()); },
   filter() {
@@ -659,6 +862,7 @@ const Appointments = {
         <td>${a.service}</td><td>${a.duration} min</td>
         <td>${Utils.statusBadge(a.status)}</td>
         <td><div class="table-actions">
+          <button class="icon-btn remind${a.reminderSent?' sent':''}" onclick="Appointments.remind(${a.id})" title="${a.reminderSent?'Rappel déjà envoyé — renvoyer':'Envoyer un rappel WhatsApp'}"><i class="fa-brands fa-whatsapp"></i></button>
           <button class="icon-btn edit" onclick="Appointments.edit(${a.id})" title="Modifier"><i class="fa-solid fa-pen"></i></button>
           <select style="font-size:.75rem;padding:.2rem .4rem;border:1px solid var(--border);border-radius:4px;cursor:pointer;max-width:110px" onchange="Appointments.changeStatus(${a.id},this.value)">
             <option value="" disabled selected>Statut</option>
@@ -670,17 +874,10 @@ const Appointments = {
   },
   edit(id) {
     const a=DB.appointments().find(x=>x.id==id); if(!a) return;
+    this.populateFilters();
     document.getElementById('modal-appt-title').innerHTML='<i class="fa-solid fa-pen"></i> Modifier le rendez-vous';
     document.getElementById('appt-edit-id').value=a.id;
-    document.getElementById('appt-patient-id').value=a.patientId;
-    document.getElementById('appt-dentist-id').value=a.dentistId;
-    document.getElementById('appt-service').value=a.service;
-    document.getElementById('appt-date').value=a.date;
-    document.getElementById('appt-time').value=a.time;
-    document.getElementById('appt-duration').value=a.duration;
-    document.getElementById('appt-status').value=a.status;
-    document.getElementById('appt-reminder').value=a.reminder||'none';
-    document.getElementById('appt-notes').value=a.notes||'';
+    this._fill(a);
     App.openModal('modal-add-appointment');
   },
   changeStatus(id,status) {
@@ -691,7 +888,7 @@ const Appointments = {
     DB.saveAppointments(appts);
     DB.logActivity('appt',`RDV de ${Utils.patientName(appts[i].patientId)} : statut → ${status}`);
     App.toast(`Statut mis à jour : ${status}`);
-    this.render(); App.updateBadges();
+    App.refreshCurrent();
   },
   save() {
     const pid=parseInt(document.getElementById('appt-patient-id').value);
@@ -714,7 +911,7 @@ const Appointments = {
       DB.logActivity('appt',`Nouveau RDV pour ${Utils.patientName(pid)} le ${Utils.formatDate(dt)}`);
       App.toast('Rendez-vous enregistré');
     }
-    App.closeModal('modal-add-appointment'); this.render(); App.updateBadges();
+    App.closeModal('modal-add-appointment'); App.refreshCurrent();
   },
   delete(id) {
     const a=DB.appointments().find(x=>x.id==id); if(!a) return;
@@ -722,7 +919,7 @@ const Appointments = {
       DB.saveAppointments(DB.appointments().filter(x=>x.id!=id));
       DB.logActivity('appt',`RDV supprimé pour ${Utils.patientName(a.patientId)}`);
       App.toast('Rendez-vous supprimé','warning');
-      this.render(); App.updateBadges();
+      App.refreshCurrent();
     });
   }
 };
@@ -749,7 +946,8 @@ const Treatments = {
     const dOpts='<option value="">— Sélectionner —</option>'+dentists.map(d=>`<option value="${d.id}">Dr ${d.firstName} ${d.lastName}</option>`).join('');
     const ds=document.getElementById('treat-dentist-id'); if(ds) ds.innerHTML=dOpts;
     const df=document.getElementById('treat-filter-dentist'); if(df) df.innerHTML='<option value="">Tous les dentistes</option>'+dentists.map(d=>`<option value="${d.id}">Dr ${d.firstName} ${d.lastName}</option>`).join('');
-    const pr=document.getElementById('treat-procedure'); if(pr) pr.innerHTML='<option value="">— Sélectionner l\'acte —</option>'+PROCEDURES_FR.map(p=>`<option>${p}</option>`).join('');
+    const procs=[...new Set([...PROCEDURES_FR,...(DB.settings().services||[]).map(s=>s.name)])];
+    const pr=document.getElementById('treat-procedure'); if(pr) pr.innerHTML='<option value="">— Sélectionner l\'acte —</option>'+procs.map(p=>`<option>${p}</option>`).join('');
     const prf=document.getElementById('treat-filter-proc'); if(prf) prf.innerHTML='<option value="">Tous les actes</option>'+PROCEDURES_FR.map(p=>`<option>${p}</option>`).join('');
     this._buildMiniChart();
   },
@@ -796,23 +994,38 @@ const Treatments = {
   },
   edit(id) {
     const t=DB.treatments().find(x=>x.id==id); if(!t) return;
+    this.populateFilters();
     document.getElementById('modal-treat-title').innerHTML='<i class="fa-solid fa-pen"></i> Modifier le soin';
     document.getElementById('treat-edit-id').value=t.id;
-    document.getElementById('treat-patient-id').value=t.patientId;
-    document.getElementById('treat-dentist-id').value=t.dentistId;
-    document.getElementById('treat-date').value=t.date;
-    document.getElementById('treat-procedure').value=t.procedure;
-    document.getElementById('treat-cost').value=t.cost;
-    document.getElementById('treat-status').value=t.status;
-    document.getElementById('treat-notes').value=t.notes||'';
-    document.getElementById('treat-followup').value=t.followup||'';
-    this.selectedTeeth=[...(t.teeth||[])];
-    document.querySelectorAll('.mini-tooth').forEach(el=>el.classList.toggle('selected',this.selectedTeeth.includes(el.dataset.tooth)));
+    this._fill(t);
     App.openModal('modal-add-treatment');
   },
-  prefillForPatient() {
-    if (App.currentPatientId) { const s=document.getElementById('treat-patient-id'); if(s) s.value=App.currentPatientId; }
+  openNew(prefill={}) {
+    this.populateFilters();
+    document.getElementById('modal-treat-title').innerHTML='<i class="fa-solid fa-syringe"></i> Saisir un soin';
+    document.getElementById('treat-edit-id').value='';
+    const v={patientId:'',dentistId:App.role==='dentiste'?1:'',date:Utils.today(),procedure:'',cost:'',status:'Terminé',notes:'',followup:'',teeth:[],...prefill};
+    this._fill(v);
     App.openModal('modal-add-treatment');
+  },
+  _fill(t) {
+    document.getElementById('treat-patient-id').value=t.patientId||'';
+    document.getElementById('treat-dentist-id').value=t.dentistId||'';
+    document.getElementById('treat-date').value=t.date||'';
+    document.getElementById('treat-procedure').value=t.procedure||'';
+    document.getElementById('treat-cost').value=t.cost??'';
+    document.getElementById('treat-status').value=t.status||'Terminé';
+    document.getElementById('treat-notes').value=t.notes||'';
+    document.getElementById('treat-followup').value=t.followup||'';
+    this.selectedTeeth=[...(t.teeth||[])].map(String);
+    document.querySelectorAll('.mini-tooth').forEach(el=>el.classList.toggle('selected',this.selectedTeeth.includes(el.dataset.tooth)));
+    document.getElementById('treat-teeth').value=this.selectedTeeth.join(',');
+  },
+  suggestCost() {
+    const proc=document.getElementById('treat-procedure').value;
+    const svc=(DB.settings().services||SERVICES_DEFAULT).find(s=>s.name===proc);
+    const cost=document.getElementById('treat-cost');
+    if (svc && !cost.value) cost.value=svc.price;
   },
   save() {
     const pid=parseInt(document.getElementById('treat-patient-id').value);
@@ -834,13 +1047,15 @@ const Treatments = {
       DB.logActivity('treatment',`${proc} effectué sur ${Utils.patientName(pid)}`);
       App.toast('Soin enregistré');
     }
-    App.closeModal('modal-add-treatment'); this.render();
+    App.closeModal('modal-add-treatment'); App.refreshCurrent();
   },
   delete(id) {
     const t=DB.treatments().find(x=>x.id==id); if(!t) return;
     App.confirmDelete(`Supprimer le soin "${t.procedure}" pour ${Utils.patientName(t.patientId)} ?`,()=>{
+      App.closeModal('modal-add-treatment');
       DB.saveTreatments(DB.treatments().filter(x=>x.id!=id));
-      App.toast('Soin supprimé','warning'); this.render();
+      DB.logActivity('treatment',`Soin supprimé : ${t.procedure} (${Utils.patientName(t.patientId)})`);
+      App.toast('Soin supprimé','warning'); App.refreshCurrent();
     });
   }
 };
@@ -848,37 +1063,154 @@ const Treatments = {
 /* ══════════════════════════════════════════
    SCHÉMA DENTAIRE
 ══════════════════════════════════════════ */
+const TOOTH_STATES = {
+  healthy:    'Saine',
+  caries:     'Carie',
+  filled:     'Obturée',
+  'root-canal':'Dévitalisée',
+  crown:      'Couronne',
+  implant:    'Implant',
+  extracted:  'Extraite',
+};
+const TOOTH_NAMES = {1:'Incisive centrale',2:'Incisive latérale',3:'Canine',4:'1re prémolaire',5:'2e prémolaire',6:'1re molaire',7:'2e molaire',8:'Dent de sagesse'};
+const PROC_TO_STATE = {
+  'Obturation composite':'filled','Obturation amalgame':'filled','Traitement canalaire':'root-canal','Pulpotomie':'root-canal',
+  'Extraction dentaire':'extracted','Extraction chirurgicale':'extracted','Extraction dent de sagesse':'extracted',
+  'Pose de couronne':'crown','Préparation de couronne':'crown','Pose de bridge':'crown','Implant dentaire':'implant'
+};
+
 const DentalChart = {
-  init() {
-    const sel=document.getElementById('chart-patient-select');
-    sel.innerHTML='<option value="">— Sélectionner un patient —</option>'+DB.patients().map(p=>`<option value="${p.id}">${p.firstName} ${p.lastName}</option>`).join('');
-    this._buildChart(); this.load();
+  pid: null,
+  all()        { try { return JSON.parse(localStorage.getItem('dc_chart'))||{}; } catch { return {}; } },
+  saveAll(d)   { localStorage.setItem('dc_chart', JSON.stringify(d)); },
+  manual(pid)  { return this.all()[pid]||{}; },
+
+  /* État de chaque dent : saisie manuelle prioritaire, sinon déduit des soins (le plus récent l'emporte) */
+  states(pid) {
+    const st={};
+    DB.treatments().filter(t=>t.patientId==pid).sort((a,b)=>a.date.localeCompare(b.date)).forEach(t=>{
+      const s=PROC_TO_STATE[t.procedure]; if (s) (t.teeth||[]).forEach(n=>{ st[n]=s; });
+    });
+    Object.entries(this.manual(pid)).forEach(([n,v])=>{ if (v.state) st[n]=v.state; });
+    return st;
   },
-  _buildChart() {
+
+  render(pid) {
+    this.pid=pid;
     const upper=[18,17,16,15,14,13,12,11,21,22,23,24,25,26,27,28];
     const lower=[48,47,46,45,44,43,42,41,31,32,33,34,35,36,37,38];
-    const mk=(nums,cid)=>{ document.getElementById(cid).innerHTML=nums.map(n=>`<div class="tooth" data-tooth="${n}" onclick="DentalChart.selectTooth(${n})"><span class="tooth-number">${n}</span><span class="tooth-icon">🦷</span></div>`).join(''); };
-    mk(upper,'teeth-upper'); mk(lower,'teeth-lower');
-  },
-  load() {
-    const pid=document.getElementById('chart-patient-select').value;
-    if (!pid) { document.querySelectorAll('.tooth').forEach(el=>{el.className='tooth';}); return; }
-    const procMap={'Obturation composite':'filled','Obturation amalgame':'filled','Traitement canalaire':'root-canal','Pulpotomie':'root-canal','Extraction dentaire':'extracted','Extraction chirurgicale':'extracted','Extraction dent de sagesse':'extracted','Pose de couronne':'crown','Préparation de couronne':'crown','Implant dentaire':'implant'};
-    const toothStatus={};
-    DB.treatments().filter(t=>t.patientId==pid).forEach(t=>{ const s=procMap[t.procedure]; if(s)(t.teeth||[]).forEach(n=>{ toothStatus[n]=s; }); });
-    document.querySelectorAll('.tooth').forEach(el=>{ el.className='tooth'; const s=toothStatus[el.dataset.tooth]; el.classList.add(s||'healthy'); });
-  },
-  selectTooth(n) {
-    document.querySelectorAll('.tooth').forEach(el=>el.classList.remove('selected'));
-    document.querySelector(`.tooth[data-tooth="${n}"]`)?.classList.add('selected');
-    const pid=document.getElementById('chart-patient-select').value;
-    const treats=pid?DB.treatments().filter(t=>t.patientId==pid&&(t.teeth||[]).includes(String(n))):[];
-    const jaw=n>=11&&n<=28?'Supérieure':'Inférieure';
-    const quad=n>=11&&n<=18?'Supérieure droite':n>=21&&n<=28?'Supérieure gauche':n>=31&&n<=38?'Inférieure gauche':'Inférieure droite';
+    const st=this.states(pid);
+    const mk=nums=>nums.map(n=>`<button type="button" class="tooth ${st[n]||'healthy'}" data-tooth="${n}" onclick="DentalChart.selectTooth(${n})" title="Dent ${n} · ${TOOTH_STATES[st[n]||'healthy']}"><span class="tooth-number">${n}</span><span class="tooth-icon">${st[n]==='extracted'?'✕':'🦷'}</span></button>`).join('');
+    document.getElementById('teeth-upper').innerHTML=mk(upper);
+    document.getElementById('teeth-lower').innerHTML=mk(lower);
+    // Résumé dans le panneau tant qu'aucune dent n'est choisie
+    const counts={}; Object.values(st).forEach(s=>{ counts[s]=(counts[s]||0)+1; });
+    const healthy=32-Object.values(st).filter(s=>s!=='healthy').length;
     document.getElementById('tooth-detail-panel').innerHTML=`
-      <div style="margin-bottom:1rem"><h3 style="font-size:1.15rem">Dent n°${n}</h3><p style="color:var(--text-muted);font-size:.85rem">Mâchoire ${jaw} · ${quad}</p></div>
-      ${treats.length?`<div style="display:flex;flex-direction:column;gap:.5rem">${treats.map(t=>`<div style="padding:.75rem;background:var(--bg);border-radius:8px;border:1px solid var(--border)"><strong style="font-size:.875rem">${t.procedure}</strong><div style="font-size:.78rem;color:var(--text-muted);margin-top:.2rem">${Utils.formatDate(t.date)} · ${Utils.dentistName(t.dentistId)}</div>${t.notes?`<div style="font-size:.8rem;margin-top:.35rem;color:var(--text-secondary)">${t.notes}</div>`:''}</div>`).join('')}</div>`:'<div class="empty-state-sm"><i class="fa-solid fa-circle-check" style="color:var(--success)"></i> Aucun soin enregistré</div>'}
-      <button class="btn-sm-primary" style="margin-top:1rem" onclick="App.navigate('treatments');setTimeout(()=>{Treatments.selectedTeeth=['${n}'];document.querySelectorAll('.mini-tooth').forEach(el=>el.classList.toggle('selected',el.dataset.tooth==='${n}'));App.openModal('modal-add-treatment');},120)"><i class="fa-solid fa-plus"></i> Saisir un soin sur #${n}</button>`;
+      <div class="tooth-summary">
+        <div><strong class="mono">${healthy}</strong><span>saines</span></div>
+        ${['caries','filled','root-canal','crown','implant','extracted'].map(s=>`<div class="ts-${s}"><strong class="mono">${counts[s]||0}</strong><span>${TOOTH_STATES[s].toLowerCase()}</span></div>`).join('')}
+      </div>
+      <p class="text-muted" style="font-size:.82rem;margin-top:.75rem"><i class="fa-solid fa-arrow-pointer"></i> Sélectionnez une dent pour la modifier.</p>`;
+  },
+
+  selectTooth(n) {
+    const pid=this.pid; if (!pid) return;
+    document.querySelectorAll('.tooth').forEach(el=>el.classList.toggle('selected',el.dataset.tooth==String(n)));
+    const st=this.states(pid)[n]||'healthy';
+    const man=this.manual(pid)[n]||{};
+    const treats=DB.treatments().filter(t=>t.patientId==pid&&(t.teeth||[]).includes(String(n))).sort((a,b)=>b.date.localeCompare(a.date));
+    const quad=n<20?'Maxillaire droit':n<30?'Maxillaire gauche':n<40?'Mandibule gauche':'Mandibule droite';
+    document.getElementById('tooth-detail-panel').innerHTML=`
+      <div class="tooth-head">
+        <div><h3>Dent ${n}</h3><p class="text-muted">${TOOTH_NAMES[n%10]} · ${quad}</p></div>
+        <span class="tooth-legend ${st}">${TOOTH_STATES[st]}</span>
+      </div>
+      <label class="tooth-label">État de la dent</label>
+      <div class="tooth-state-picker">
+        ${Object.entries(TOOTH_STATES).map(([k,l])=>`<button type="button" class="tooth-legend ${k} ${k===st?'active':''}" onclick="DentalChart.setState(${n},'${k}')">${l}</button>`).join('')}
+      </div>
+      <label class="tooth-label" for="tooth-note">Note</label>
+      <textarea id="tooth-note" rows="2" placeholder="Ex : sensibilité au froid, à surveiller…">${man.note||''}</textarea>
+      <div class="tooth-actions">
+        <button class="btn-secondary" onclick="DentalChart.saveNote(${n})"><i class="fa-solid fa-save"></i> Enregistrer la note</button>
+        <button class="btn-sm-primary" onclick="Treatments.openNew({patientId:${pid},teeth:['${n}']})"><i class="fa-solid fa-plus"></i> Saisir un soin</button>
+      </div>
+      <label class="tooth-label">Historique des soins</label>
+      ${treats.length?`<div class="tooth-history">${treats.map(t=>`<div class="tooth-history-item" onclick="Treatments.edit(${t.id})"><strong>${t.procedure}</strong><small>${Utils.formatDate(t.date)} · ${Utils.dentistName(t.dentistId)}</small>${t.notes?`<p>${t.notes}</p>`:''}</div>`).join('')}</div>`:'<div class="empty-state-sm"><i class="fa-solid fa-circle-check" style="color:var(--success)"></i> Aucun soin enregistré sur cette dent</div>'}`;
+    if (window.innerWidth<1100) document.getElementById('tooth-detail-panel').scrollIntoView({behavior:'smooth',block:'nearest'});
+  },
+
+  setState(n, state) {
+    const all=this.all(); all[this.pid]=all[this.pid]||{};
+    all[this.pid][n]={...(all[this.pid][n]||{}), state};
+    this.saveAll(all);
+    DB.logActivity('treatment',`Dent ${n} de ${Utils.patientName(this.pid)} : ${TOOTH_STATES[state]}`);
+    this.render(this.pid); this.selectTooth(n);
+    App.toast(`Dent ${n} : ${TOOTH_STATES[state]}`);
+  },
+
+  saveNote(n) {
+    const all=this.all(); all[this.pid]=all[this.pid]||{};
+    all[this.pid][n]={...(all[this.pid][n]||{}), note:document.getElementById('tooth-note').value.trim()};
+    this.saveAll(all);
+    App.toast(`Note enregistrée pour la dent ${n}`);
+  }
+};
+
+/* ══════════════════════════════════════════
+   FICHIERS & RADIOS (stockés dans le navigateur)
+══════════════════════════════════════════ */
+const Files = {
+  MAX: 1.5*1024*1024,
+  all()       { try { return JSON.parse(localStorage.getItem('dc_files'))||[]; } catch { return []; } },
+  saveAll(d)  { localStorage.setItem('dc_files', JSON.stringify(d)); },
+  removeForPatient(pid) { this.saveAll(this.all().filter(f=>f.patientId!=pid)); },
+
+  render(pid) {
+    const list=this.all().filter(f=>f.patientId==pid).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+    document.getElementById('detail-file-count').textContent=`${list.length} fichier${list.length>1?'s':''}`;
+    document.getElementById('detail-files-list').innerHTML=list.length?list.map(f=>`
+      <div class="file-card" onclick="Files.view(${f.id})" title="${f.name}">
+        ${f.type.startsWith('image/')?`<div class="file-thumb" style="background-image:url('${f.data}')"></div>`:'<i class="fa-solid fa-file-pdf"></i>'}
+        <p>${f.name}</p><small>${Utils.formatDate(f.createdAt.split('T')[0])}</small>
+      </div>`).join(''):`<div class="empty-state-sm files-empty"><i class="fa-solid fa-x-ray"></i> Aucun fichier. Ajoutez une radio, une photo ou un PDF (max 1,5 Mo, stocké uniquement dans ce navigateur).</div>`;
+  },
+
+  upload(fileList) {
+    const pid=App.currentPatientId; if (!pid||!fileList.length) return;
+    [...fileList].forEach(file=>{
+      if (file.size>this.MAX) { App.toast(`« ${file.name} » dépasse 1,5 Mo — trop lourd pour la démo`,'error'); return; }
+      const r=new FileReader();
+      r.onload=()=>{
+        const all=this.all();
+        const id=DB.nextId('files');
+        all.push({id,patientId:pid,name:file.name,type:file.type||'application/octet-stream',data:r.result,createdAt:new Date().toISOString()});
+        try { this.saveAll(all); }
+        catch { App.toast('Stockage du navigateur plein. Supprimez quelques fichiers.','error'); return; }
+        DB.logActivity('patient',`Fichier « ${file.name} » ajouté au dossier de ${Utils.patientName(pid)}`);
+        App.toast(`« ${file.name} » ajouté`);
+        this.render(pid);
+      };
+      r.readAsDataURL(file);
+    });
+  },
+
+  view(id) {
+    const f=this.all().find(x=>x.id==id); if (!f) return;
+    document.getElementById('file-view-title').innerHTML=`<i class="fa-solid ${f.type.startsWith('image/')?'fa-image':'fa-file-pdf'}"></i> ${f.name}`;
+    document.getElementById('file-view-content').innerHTML=f.type.startsWith('image/')
+      ? `<img src="${f.data}" alt="${f.name}"/>`
+      : f.type==='application/pdf' ? `<iframe src="${f.data}" title="${f.name}"></iframe>` : '<p class="text-muted">Aperçu indisponible pour ce type de fichier.</p>';
+    const dl=document.getElementById('file-view-download'); dl.href=f.data; dl.download=f.name;
+    document.getElementById('file-view-delete').onclick=()=>{
+      App.confirmDelete(`Supprimer le fichier « ${f.name} » ?`,()=>{
+        this.saveAll(this.all().filter(x=>x.id!=id));
+        App.toast('Fichier supprimé','warning');
+        this.render(f.patientId);
+      });
+    };
+    App.openModal('modal-file-view');
   }
 };
 
@@ -934,7 +1266,7 @@ const Payments = {
   addItem(desc='',amount='') {
     const c=document.getElementById('pay-items-container');
     const row=document.createElement('div'); row.className='pay-item-row';
-    row.innerHTML=`<input type="text" placeholder="Description (ex: Détartrage)" value="${desc}" oninput="Payments.updateTotals()"/><input type="number" class="amount-input" placeholder="0.00" value="${amount}" min="0" step="0.01" oninput="Payments.updateTotals()"/><button type="button" onclick="this.parentElement.remove();Payments.updateTotals()"><i class="fa-solid fa-xmark"></i></button>`;
+    row.innerHTML=`<input type="text" list="svc-datalist" placeholder="Description (ex: Détartrage)" value="${desc}" oninput="Payments.fillPrice(this)"/><input type="number" class="amount-input" placeholder="0.00" value="${amount}" min="0" step="0.01" oninput="Payments.updateTotals()"/><button type="button" onclick="this.parentElement.remove();Payments.updateTotals()"><i class="fa-solid fa-xmark"></i></button>`;
     c.appendChild(row); this.updateTotals();
   },
   updateTotals() {
@@ -948,7 +1280,19 @@ const Payments = {
     const s=(id,v)=>{ const e=document.getElementById(id); if(e) e.textContent=f(v); };
     s('inv-subtotal',sub); s('inv-total',tot); s('inv-paid-display',paid); s('inv-balance',bal<0?0:bal);
   },
+  fillPrice(inp) {
+    const svc=(DB.settings().services||SERVICES_DEFAULT).find(s=>s.name===inp.value);
+    const amt=inp.parentElement.querySelector('.amount-input');
+    if (svc && !amt.value) amt.value=svc.price;
+    this.updateTotals();
+  },
+  _total(p) { return p.items.reduce((s,i)=>s+parseFloat(i.amount||0),0)*(1-(p.discount||0)/100); },
   _openAdd() {
+    const ps=document.getElementById('pay-patient-id');
+    ps.innerHTML='<option value="">— Sélectionner un patient —</option>'+DB.patients().map(p=>`<option value="${p.id}">${p.firstName} ${p.lastName}</option>`).join('');
+    let dl=document.getElementById('svc-datalist');
+    if (!dl) { dl=document.createElement('datalist'); dl.id='svc-datalist'; document.body.appendChild(dl); }
+    dl.innerHTML=(DB.settings().services||SERVICES_DEFAULT).map(s=>`<option value="${s.name}">${Utils.currency(s.price)}</option>`).join('');
     document.getElementById('modal-pay-title').innerHTML='<i class="fa-solid fa-file-invoice-dollar"></i> Nouvelle facture';
     document.getElementById('pay-edit-id').value='';
     document.getElementById('pay-date').value=Utils.today();
@@ -980,36 +1324,44 @@ const Payments = {
     this.updateTotals();
     App.openModal('modal-add-payment');
   },
-  prefillForPatient() {
+  openNew(prefill={}) {
     this._openAdd();
-    if (App.currentPatientId) { const s=document.getElementById('pay-patient-id'); if(s) s.value=App.currentPatientId; }
+    if (prefill.patientId) document.getElementById('pay-patient-id').value=prefill.patientId;
     App.openModal('modal-add-payment');
   },
   save() {
     const pid=parseInt(document.getElementById('pay-patient-id').value);
     const dt=document.getElementById('pay-date').value;
-    if (!pid||!dt) { App.toast('Veuillez sélectionner le patient et la date','error'); return; }
+    if (!pid||!dt) { App.toast('Veuillez sélectionner le patient et la date','error'); return null; }
     const rows=document.querySelectorAll('.pay-item-row');
     const items=[];
     rows.forEach(r=>{ const desc=r.querySelectorAll('input')[0].value.trim(); const amt=parseFloat(r.querySelectorAll('input')[1].value)||0; if(desc) items.push({description:desc,amount:amt}); });
-    if (!items.length) { App.toast('Ajoutez au moins une ligne','error'); return; }
+    if (!items.length) { App.toast('Ajoutez au moins une ligne','error'); return null; }
     const editId=document.getElementById('pay-edit-id').value;
     const pays=DB.payments();
     const data={patientId:pid,date:dt,dueDate:document.getElementById('pay-due-date').value,method:document.getElementById('pay-method').value,status:document.getElementById('pay-status').value,paidAmount:parseFloat(document.getElementById('pay-paid-amount').value)||0,discount:parseFloat(document.getElementById('inv-discount').value)||0,notes:document.getElementById('pay-notes').value.trim(),items};
+    // Statut cohérent avec le montant versé
+    const total=this._total(data);
+    if (total>0 && data.paidAmount>=total-0.005) data.status='Payé';
+    else if (data.paidAmount>0 && data.status!=='En retard') data.status='Partiel';
+    else if (data.paidAmount===0 && data.status==='Payé') data.status='En attente';
+    let savedId;
     if (editId) {
       const i=pays.findIndex(x=>x.id==editId); pays[i]={...pays[i],...data};
-      DB.savePayments(pays); App.toast('Facture modifiée');
+      DB.savePayments(pays); App.toast('Facture modifiée'); savedId=pays[i].id;
+      DB.logActivity('payment',`Facture ${pays[i].invoiceNumber} modifiée (${data.status})`);
     } else {
       const id=DB.nextId('payments');
       const inv='FAC-'+String(id).padStart(3,'0');
       pays.push({id,invoiceNumber:inv,...data,createdAt:new Date().toISOString()});
       DB.savePayments(pays);
       DB.logActivity('payment',`Facture ${inv} créée pour ${Utils.patientName(pid)}`);
-      App.toast('Facture créée');
+      App.toast('Facture créée'); savedId=id;
     }
-    App.closeModal('modal-add-payment'); this.render(); App.updateBadges();
+    App.closeModal('modal-add-payment'); App.refreshCurrent();
+    return savedId;
   },
-  saveAndPrint() { this.save(); const pays=DB.payments(); this.printInvoice(pays[pays.length-1]?.id); },
+  saveAndPrint() { const id=this.save(); if (id) this.printInvoice(id); },
   printInvoice(id) {
     const p=DB.payments().find(x=>x.id==id); if(!p) return;
     const sub=p.items.reduce((s,i)=>s+parseFloat(i.amount||0),0);
@@ -1040,7 +1392,7 @@ const Payments = {
     const p=DB.payments().find(x=>x.id==id); if(!p) return;
     App.confirmDelete(`Supprimer la facture ${p.invoiceNumber} pour ${Utils.patientName(p.patientId)} ?`,()=>{
       DB.savePayments(DB.payments().filter(x=>x.id!=id));
-      App.toast('Facture supprimée','warning'); this.render(); App.updateBadges();
+      App.toast('Facture supprimée','warning'); App.refreshCurrent();
     });
   }
 };
@@ -1071,7 +1423,7 @@ const Reports = {
   refresh() { this.render(); },
   _revChart(pays) {
     const months=[],revs=[];
-    for(let i=11;i>=0;i--){const d=new Date();d.setMonth(d.getMonth()-i);const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;months.push(d.toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}));revs.push(pays.filter(p=>p.date&&p.date.startsWith(k)).reduce((s,p)=>s+parseFloat(p.paidAmount||0),0));}
+    for(let i=11;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;months.push(d.toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}));revs.push(pays.filter(p=>p.date&&p.date.startsWith(k)).reduce((s,p)=>s+parseFloat(p.paidAmount||0),0));}
     const ctx=document.getElementById('rep-revenue-chart')?.getContext('2d'); if(!ctx) return;
     if(this.charts.rev) this.charts.rev.destroy();
     this.charts.rev=new Chart(ctx,{type:'line',data:{labels:months,datasets:[{label:'Revenu',data:revs,borderColor:'#3d6d78',backgroundColor:'rgba(61,109,120,.1)',tension:.4,fill:true,pointBackgroundColor:'#3d6d78',pointRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+' €'},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}}});
@@ -1129,6 +1481,13 @@ const Staff = {
         <div class="staff-card-actions"><button class="icon-btn edit" onclick="Staff.edit(${s.id})"><i class="fa-solid fa-pen"></i></button><button class="icon-btn del" onclick="Staff.delete(${s.id})"><i class="fa-solid fa-trash"></i></button></div>
       </div>`).join('');
   },
+  openNew() {
+    document.getElementById('modal-staff-title').innerHTML='<i class="fa-solid fa-user-doctor"></i> Ajouter un membre du personnel';
+    document.getElementById('staff-edit-id').value='';
+    ['staff-first','staff-last','staff-phone','staff-email','staff-license','staff-exp','staff-notes'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('staff-role').value='Dentiste';
+    App.openModal('modal-add-staff');
+  },
   edit(id) {
     const s=DB.staff().find(x=>x.id==id); if(!s) return;
     document.getElementById('modal-staff-title').innerHTML='<i class="fa-solid fa-pen"></i> Modifier le membre';
@@ -1156,6 +1515,7 @@ const Staff = {
   },
   delete(id) {
     const s=DB.staff().find(x=>x.id==id); if(!s) return;
+    if (s.id===1) { App.toast('On ne licencie pas la dentiste titulaire. C\'est elle qui signe les chèques 😅','warning'); return; }
     App.confirmDelete(`Retirer ${s.firstName} ${s.lastName} du personnel ?`,()=>{
       DB.saveStaff(DB.staff().filter(x=>x.id!=id)); App.toast('Membre retiré','warning'); this.render();
     });
@@ -1186,7 +1546,7 @@ const Settings = {
   wh:null, svc:null,
   render() {
     const s=DB.settings();
-    const sv=(id,v)=>{ const e=document.getElementById(id); if(e&&v) e.value=v; };
+    const sv=(id,v)=>{ const e=document.getElementById(id); if(e) e.value=v||e.defaultValue; };
     sv('setting-clinic-name',s.clinicName); sv('setting-clinic-phone',s.clinicPhone);
     sv('setting-clinic-email',s.clinicEmail); sv('setting-clinic-address',s.clinicAddr);
     sv('setting-clinic-city',s.clinicCity); sv('setting-clinic-website',s.clinicWebsite);
@@ -1215,7 +1575,17 @@ const Settings = {
       clinicWebsite:document.getElementById('setting-clinic-website').value,
       workingHours: this.wh, services: this.svc,
     });
+    App.applyClinicName();
     App.toast('Paramètres enregistrés');
+  },
+  resetDemo() {
+    App.confirmDelete('Réinitialiser la démo ? Toutes vos modifications seront effacées et les données d\'exemple restaurées.',()=>{
+      clearDemoData(); seedData();
+      App._notifRead=false;
+      App.applyClinicName();
+      App.toast('Démo réinitialisée. Comme si de rien n\'était 🪄');
+      App.navigate('dashboard');
+    });
   }
 };
 

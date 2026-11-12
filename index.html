@@ -30,25 +30,35 @@
       <h1>Dental <span>Clinic</span></h1>
       <p>Gestion de cabinet dentaire</p>
     </div>
-    <form id="login-form" class="login-form">
+    <form id="login-form" class="login-form" autocomplete="off">
+      <div class="login-role-select">
+        <label>Je suis</label>
+        <div class="role-buttons">
+          <button type="button" class="role-btn active" data-role="dentiste"><i class="fa-solid fa-user-doctor"></i> Dentiste</button>
+          <button type="button" class="role-btn" data-role="assistante"><i class="fa-solid fa-user-nurse"></i> Assistante</button>
+        </div>
+      </div>
       <div class="form-group">
         <label><i class="fa-solid fa-user"></i> Nom d'utilisateur</label>
-        <input type="text" id="login-user" placeholder="admin" autocomplete="username"/>
+        <input type="text" id="login-user" placeholder="dentiste" autocomplete="username" autocapitalize="none"/>
       </div>
       <div class="form-group">
         <label><i class="fa-solid fa-lock"></i> Mot de passe</label>
-        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
-      </div>
-      <div class="login-role-select">
-        <label>Se connecter en tant que</label>
-        <div class="role-buttons">
-          <button type="button" class="role-btn active" data-role="admin"><i class="fa-solid fa-shield-halved"></i> Admin</button>
-          <button type="button" class="role-btn" data-role="dentist"><i class="fa-solid fa-user-doctor"></i> Dentiste</button>
-          <button type="button" class="role-btn" data-role="receptionist"><i class="fa-solid fa-headset"></i> Réceptionniste</button>
+        <div class="pass-row">
+          <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
+          <button type="button" class="hint-btn" id="hint-btn" title="Mot de passe oublié ?"><i class="fa-solid fa-lightbulb"></i></button>
         </div>
       </div>
+      <div class="hint-bubble hidden" id="hint-bubble">
+        <div class="hint-title">🤫 Psst… vous avez déjà oublié ?</div>
+        <p>On ne le dit qu'à vous (et à tous les visiteurs de la démo) :</p>
+        <div class="hint-cred"><span><strong>dentiste</strong> / <code>sourire</code></span><button type="button" class="hint-fill" data-u="dentiste" data-p="sourire" data-r="dentiste">Remplir</button></div>
+        <div class="hint-cred"><span><strong>assistante</strong> / <code>molaire</code></span><button type="button" class="hint-fill" data-u="assistante" data-p="molaire" data-r="assistante">Remplir</button></div>
+        <small>Le dentiste veut toujours voir votre <em>sourire</em>. L'assistante, elle, connaît chaque <em>molaire</em> par son prénom.</small>
+      </div>
+      <p class="login-error hidden" id="login-error"></p>
       <button type="submit" class="btn-login">Se connecter <i class="fa-solid fa-arrow-right"></i></button>
-      <p class="login-hint">Démo : n'importe quel identifiant/mot de passe</p>
+      <p class="login-hint">Version de démonstration · données fictives</p>
     </form>
   </div>
   <p class="login-credit">Conçu et développé par <a href="https://cictnardc.net" target="_blank" rel="noopener">CICTNA RDC</a></p>
@@ -94,24 +104,21 @@
       <a class="nav-item" data-page="treatments">
         <i class="fa-solid fa-syringe"></i><span>Traitements</span>
       </a>
-      <a class="nav-item" data-page="dental-chart">
-        <i class="fa-solid fa-teeth"></i><span>Schéma dentaire</span>
-      </a>
 
       <div class="nav-section-label">Finance</div>
       <a class="nav-item" data-page="payments">
         <i class="fa-solid fa-file-invoice-dollar"></i><span>Paiements</span>
         <span class="nav-badge pending" id="nav-badge-pending">0</span>
       </a>
-      <a class="nav-item" data-page="reports">
+      <a class="nav-item dentist-only" data-page="reports">
         <i class="fa-solid fa-chart-line"></i><span>Rapports</span>
       </a>
 
-      <div class="nav-section-label">Système</div>
-      <a class="nav-item" data-page="staff">
+      <div class="nav-section-label dentist-only">Système</div>
+      <a class="nav-item dentist-only" data-page="staff">
         <i class="fa-solid fa-user-doctor"></i><span>Personnel</span>
       </a>
-      <a class="nav-item" data-page="settings">
+      <a class="nav-item dentist-only" data-page="settings">
         <i class="fa-solid fa-gear"></i><span>Paramètres</span>
       </a>
     </nav>
@@ -143,10 +150,13 @@
           <input type="text" id="global-search" placeholder="Rechercher un patient…"/>
           <div class="search-results" id="search-results"></div>
         </div>
-        <button class="topbar-icon-btn" title="Notifications">
-          <i class="fa-solid fa-bell"></i>
-          <span class="notif-dot" id="notif-dot"></span>
-        </button>
+        <div class="notif-wrap">
+          <button class="topbar-icon-btn" id="notif-btn" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+            <span class="notif-dot visible" id="notif-dot"></span>
+          </button>
+          <div class="notif-panel hidden" id="notif-panel"></div>
+        </div>
         <div class="topbar-date"><i class="fa-solid fa-calendar-day"></i> <span id="topbar-date"></span></div>
       </div>
     </header>
@@ -161,7 +171,7 @@
             <h2><span id="greeting-time">Bonjour</span>, <span id="greeting-name">Docteur</span> 👋</h2>
             <p class="page-subtitle">Voici ce qui se passe dans votre clinique aujourd'hui.</p>
           </div>
-          <button class="btn-primary" onclick="App.navigate('appointments'); setTimeout(()=>App.openModal('modal-add-appointment'),120)">
+          <button class="btn-primary" onclick="App.navigate('appointments'); Appointments.openNew()">
             <i class="fa-solid fa-plus"></i> Nouveau rendez-vous
           </button>
         </div>
@@ -206,8 +216,8 @@
             <div class="card-header">
               <h3><i class="fa-solid fa-chart-bar"></i> Aperçu des revenus</h3>
               <div class="chart-period-tabs">
-                <button class="tab-btn active" data-period="6m">6M</button>
-                <button class="tab-btn" data-period="12m">12M</button>
+                <button class="tab-btn active" data-period="6m" onclick="Dashboard.setPeriod(6,this)">6M</button>
+                <button class="tab-btn" data-period="12m" onclick="Dashboard.setPeriod(12,this)">12M</button>
               </div>
             </div>
             <div class="card-body"><canvas id="revenue-chart" height="90"></canvas></div>
@@ -244,23 +254,23 @@
           <div class="card-header"><h3><i class="fa-solid fa-bolt"></i> Actions rapides</h3></div>
           <div class="card-body">
             <div class="quick-actions">
-              <button class="quick-action-btn" onclick="App.navigate('patients'); setTimeout(()=>App.openModal('modal-add-patient'),120)">
+              <button class="quick-action-btn" onclick="App.navigate('patients'); Patients.openNew()">
                 <i class="fa-solid fa-user-plus"></i><span>Nouveau patient</span>
               </button>
-              <button class="quick-action-btn" onclick="App.navigate('appointments'); setTimeout(()=>App.openModal('modal-add-appointment'),120)">
+              <button class="quick-action-btn" onclick="App.navigate('appointments'); Appointments.openNew()">
                 <i class="fa-solid fa-calendar-plus"></i><span>Rendez-vous</span>
               </button>
-              <button class="quick-action-btn" onclick="App.navigate('treatments'); setTimeout(()=>App.openModal('modal-add-treatment'),120)">
+              <button class="quick-action-btn" onclick="App.navigate('treatments'); Treatments.openNew()">
                 <i class="fa-solid fa-syringe"></i><span>Saisir un soin</span>
               </button>
-              <button class="quick-action-btn" onclick="App.navigate('payments'); setTimeout(()=>App.openModal('modal-add-payment'),120)">
+              <button class="quick-action-btn" onclick="App.navigate('payments'); Payments.openNew()">
                 <i class="fa-solid fa-file-invoice-dollar"></i><span>Nouvelle facture</span>
               </button>
               <button class="quick-action-btn" onclick="App.navigate('reports')">
                 <i class="fa-solid fa-chart-line"></i><span>Rapports</span>
               </button>
-              <button class="quick-action-btn" onclick="App.navigate('dental-chart')">
-                <i class="fa-solid fa-teeth"></i><span>Schéma dentaire</span>
+              <button class="quick-action-btn" onclick="Appointments.remindTomorrow()">
+                <i class="fa-brands fa-whatsapp"></i><span>Rappels de demain</span>
               </button>
             </div>
           </div>
@@ -274,7 +284,7 @@
             <h2>Patients</h2>
             <p class="page-subtitle">Gérez les dossiers et l'historique des patients.</p>
           </div>
-          <button class="btn-primary" onclick="App.openModal('modal-add-patient')">
+          <button class="btn-primary" onclick="Patients.openNew()">
             <i class="fa-solid fa-user-plus"></i> Ajouter un patient
           </button>
         </div>
@@ -315,7 +325,7 @@
           <i class="fa-solid fa-user-slash"></i>
           <h3>Aucun patient trouvé</h3>
           <p>Ajoutez votre premier patient ou modifiez les filtres.</p>
-          <button class="btn-primary" onclick="App.openModal('modal-add-patient')"><i class="fa-solid fa-plus"></i> Ajouter un patient</button>
+          <button class="btn-primary" onclick="Patients.openNew()"><i class="fa-solid fa-plus"></i> Ajouter un patient</button>
         </div>
       </section>
 
@@ -324,8 +334,9 @@
         <div class="page-header">
           <button class="btn-back" onclick="App.navigate('patients')"><i class="fa-solid fa-arrow-left"></i> Retour aux patients</button>
           <div class="patient-detail-actions">
+            <button class="btn-secondary btn-danger-ghost" onclick="Patients.deleteCurrent()" title="Supprimer le patient"><i class="fa-solid fa-trash"></i></button>
             <button class="btn-secondary" onclick="Patients.editCurrent()"><i class="fa-solid fa-pen"></i> Modifier</button>
-            <button class="btn-primary" onclick="App.navigate('appointments'); setTimeout(()=>Patients.prefillAppointment(),120)"><i class="fa-solid fa-calendar-plus"></i> Rendez-vous</button>
+            <button class="btn-primary" onclick="Appointments.openNew({patientId:App.currentPatientId})"><i class="fa-solid fa-calendar-plus"></i> Rendez-vous</button>
           </div>
         </div>
         <div class="patient-detail-layout">
@@ -362,36 +373,69 @@
           <!-- Panneau droit -->
           <div class="patient-detail-main">
             <div class="tabs">
-              <button class="tab active" data-tab="detail-appointments">Rendez-vous</button>
+              <button class="tab active" data-tab="detail-chart"><i class="fa-solid fa-teeth"></i> Schéma dentaire</button>
+              <button class="tab" data-tab="detail-appointments">Rendez-vous</button>
               <button class="tab" data-tab="detail-treatments">Soins</button>
               <button class="tab" data-tab="detail-payments">Paiements</button>
               <button class="tab" data-tab="detail-files">Fichiers & Radios</button>
             </div>
-            <div id="detail-appointments" class="tab-content active">
+            <div id="detail-chart" class="tab-content active">
+              <div class="card dental-chart-card">
+                <div class="card-header">
+                  <h3><i class="fa-solid fa-teeth"></i> Denture adulte (FDI)</h3>
+                  <div class="chart-legend-inline">
+                    <span class="tooth-legend healthy">Saine</span>
+                    <span class="tooth-legend caries">Carie</span>
+                    <span class="tooth-legend filled">Obturée</span>
+                    <span class="tooth-legend root-canal">Dévitalisée</span>
+                    <span class="tooth-legend crown">Couronne</span>
+                    <span class="tooth-legend implant">Implant</span>
+                    <span class="tooth-legend extracted">Extraite</span>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div id="dental-chart-container">
+                    <div class="jaw-label">Maxillaire</div>
+                    <div class="teeth-row" id="teeth-upper"></div>
+                    <div class="jaw-divider"><span>Ligne médiane</span></div>
+                    <div class="teeth-row" id="teeth-lower"></div>
+                    <div class="jaw-label">Mandibule</div>
+                  </div>
+                  <p class="chart-help"><i class="fa-solid fa-hand-pointer"></i> Cliquez sur une dent pour voir son historique, changer son état ou saisir un soin.</p>
+                </div>
+              </div>
+              <div class="card tooth-detail-card">
+                <div class="card-body" id="tooth-detail-panel">
+                  <div class="empty-state-sm"><i class="fa-solid fa-arrow-pointer"></i> Aucune dent sélectionnée</div>
+                </div>
+              </div>
+            </div>
+            <div id="detail-appointments" class="tab-content">
               <div class="tab-toolbar">
                 <span class="tab-count" id="detail-appt-count">0 rendez-vous</span>
-                <button class="btn-sm-primary" onclick="App.navigate('appointments'); setTimeout(()=>Patients.prefillAppointment(),120)"><i class="fa-solid fa-plus"></i> Ajouter</button>
+                <button class="btn-sm-primary" onclick="Appointments.openNew({patientId:App.currentPatientId})"><i class="fa-solid fa-plus"></i> Ajouter</button>
               </div>
               <div id="detail-appointments-list"></div>
             </div>
             <div id="detail-treatments" class="tab-content">
               <div class="tab-toolbar">
                 <span class="tab-count" id="detail-treat-count">0 soins</span>
-                <button class="btn-sm-primary" onclick="App.navigate('treatments'); setTimeout(()=>Treatments.prefillForPatient(),120)"><i class="fa-solid fa-plus"></i> Saisir</button>
+                <button class="btn-sm-primary" onclick="Treatments.openNew({patientId:App.currentPatientId})"><i class="fa-solid fa-plus"></i> Saisir</button>
               </div>
               <div id="detail-treatments-list"></div>
             </div>
             <div id="detail-payments" class="tab-content">
               <div class="tab-toolbar">
                 <span class="tab-count" id="detail-pay-count">0 € total</span>
-                <button class="btn-sm-primary" onclick="App.navigate('payments'); setTimeout(()=>Payments.prefillForPatient(),120)"><i class="fa-solid fa-plus"></i> Facture</button>
+                <button class="btn-sm-primary" onclick="Payments.openNew({patientId:App.currentPatientId})"><i class="fa-solid fa-plus"></i> Facture</button>
               </div>
               <div id="detail-payments-list"></div>
             </div>
             <div id="detail-files" class="tab-content">
               <div class="tab-toolbar">
-                <span class="tab-count">Fichiers joints</span>
-                <button class="btn-sm-primary" onclick="Patients.addFile()"><i class="fa-solid fa-upload"></i> Téléverser</button>
+                <span class="tab-count" id="detail-file-count">Fichiers joints</span>
+                <button class="btn-sm-primary" onclick="document.getElementById('file-input').click()"><i class="fa-solid fa-upload"></i> Téléverser</button>
+                <input type="file" id="file-input" accept="image/*,application/pdf" multiple hidden onchange="Files.upload(this.files);this.value=''"/>
               </div>
               <div id="detail-files-list" class="files-grid"></div>
             </div>
@@ -406,7 +450,7 @@
             <h2>Rendez-vous</h2>
             <p class="page-subtitle">Planifiez et gérez les rendez-vous des patients.</p>
           </div>
-          <button class="btn-primary" onclick="App.openModal('modal-add-appointment')">
+          <button class="btn-primary" onclick="Appointments.openNew()">
             <i class="fa-solid fa-plus"></i> Nouveau rendez-vous
           </button>
         </div>
@@ -445,7 +489,7 @@
           <i class="fa-solid fa-calendar-xmark"></i>
           <h3>Aucun rendez-vous trouvé</h3>
           <p>Planifiez le premier rendez-vous ou ajustez vos filtres.</p>
-          <button class="btn-primary" onclick="App.openModal('modal-add-appointment')"><i class="fa-solid fa-plus"></i> Nouveau rendez-vous</button>
+          <button class="btn-primary" onclick="Appointments.openNew()"><i class="fa-solid fa-plus"></i> Nouveau rendez-vous</button>
         </div>
       </section>
 
@@ -456,7 +500,7 @@
             <h2>Traitements & Soins</h2>
             <p class="page-subtitle">Consignez et suivez tous les actes cliniques.</p>
           </div>
-          <button class="btn-primary" onclick="App.openModal('modal-add-treatment')">
+          <button class="btn-primary" onclick="Treatments.openNew()">
             <i class="fa-solid fa-plus"></i> Saisir un soin
           </button>
         </div>
@@ -490,51 +534,11 @@
         </div>
       </section>
 
-      <!-- ══════ SCHÉMA DENTAIRE ══════ -->
-      <section id="page-dental-chart" class="page">
-        <div class="page-header">
-          <div><h2>Schéma dentaire</h2><p class="page-subtitle">Carte dentaire visuelle par patient.</p></div>
-          <select id="chart-patient-select" class="select-lg" onchange="DentalChart.load()">
-            <option value="">— Sélectionner un patient —</option>
-          </select>
-        </div>
-        <div class="dental-chart-layout">
-          <div class="card dental-chart-card">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-teeth"></i> Denture adulte (Notation FDI)</h3>
-              <div class="chart-legend-inline">
-                <span class="tooth-legend healthy">Saine</span>
-                <span class="tooth-legend filled">Obturée</span>
-                <span class="tooth-legend root-canal">Dévitalisée</span>
-                <span class="tooth-legend extracted">Extraite</span>
-                <span class="tooth-legend crown">Couronne</span>
-                <span class="tooth-legend implant">Implant</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <div id="dental-chart-container">
-                <div class="jaw-label">Mâchoire supérieure (Maxillaire)</div>
-                <div class="teeth-row" id="teeth-upper"></div>
-                <div class="jaw-divider"><span>Ligne médiane</span></div>
-                <div class="teeth-row" id="teeth-lower"></div>
-                <div class="jaw-label">Mâchoire inférieure (Mandibule)</div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3><i class="fa-solid fa-note-sticky"></i> Détails de la dent</h3></div>
-            <div class="card-body" id="tooth-detail-panel">
-              <div class="empty-state-sm"><i class="fa-solid fa-arrow-pointer"></i> Cliquez sur une dent pour voir les détails</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- ══════ PAIEMENTS ══════ -->
       <section id="page-payments" class="page">
         <div class="page-header">
           <div><h2>Paiements & Factures</h2><p class="page-subtitle">Suivez la facturation et les historiques de paiement.</p></div>
-          <button class="btn-primary" onclick="App.openModal('modal-add-payment')"><i class="fa-solid fa-plus"></i> Nouvelle facture</button>
+          <button class="btn-primary" onclick="Payments.openNew()"><i class="fa-solid fa-plus"></i> Nouvelle facture</button>
         </div>
         <div class="stats-grid stats-grid-sm">
           <div class="stat-card stat-green"><div class="stat-icon"><i class="fa-solid fa-check-circle"></i></div><div class="stat-info"><span class="stat-number" id="pay-stat-paid">0 €</span><span class="stat-label">Total encaissé</span></div></div>
@@ -562,6 +566,7 @@
               <option value="Carte de débit">Carte de débit</option>
               <option value="Virement bancaire">Virement bancaire</option>
               <option value="Assurance">Assurance</option>
+              <option value="Chèque">Chèque</option>
             </select>
           </div>
         </div>
@@ -614,7 +619,7 @@
       <section id="page-staff" class="page">
         <div class="page-header">
           <div><h2>Gestion du personnel</h2><p class="page-subtitle">Dentistes et équipe de la clinique.</p></div>
-          <button class="btn-primary" onclick="App.openModal('modal-add-staff')"><i class="fa-solid fa-plus"></i> Ajouter</button>
+          <button class="btn-primary" onclick="Staff.openNew()"><i class="fa-solid fa-plus"></i> Ajouter</button>
         </div>
         <div id="staff-grid" class="staff-grid"></div>
       </section>
@@ -646,6 +651,14 @@
             <div class="card-body">
               <div id="services-list" class="services-list"></div>
               <button class="btn-secondary mt-2" onclick="Settings.addService()"><i class="fa-solid fa-plus"></i> Ajouter un service</button>
+              <button class="btn-primary mt-2" onclick="Settings.save()"><i class="fa-solid fa-save"></i> Enregistrer</button>
+            </div>
+          </div>
+          <div class="card settings-section">
+            <div class="card-header"><h3><i class="fa-solid fa-rotate-left"></i> Données de démonstration</h3></div>
+            <div class="card-body">
+              <p class="text-muted" style="font-size:.875rem;margin-bottom:.75rem">Toutes les données sont fictives et restent dans votre navigateur. Vous avez tout cassé ? Pas de panique, on remet tout comme neuf.</p>
+              <button class="btn-danger" onclick="Settings.resetDemo()"><i class="fa-solid fa-rotate-left"></i> Réinitialiser la démo</button>
             </div>
           </div>
         </div>
@@ -752,7 +765,7 @@
         <div class="form-group form-full"><label>Patient *</label><select id="treat-patient-id"><option value="">— Sélectionner un patient —</option></select></div>
         <div class="form-group"><label>Dentiste *</label><select id="treat-dentist-id"><option value="">— Sélectionner —</option></select></div>
         <div class="form-group"><label>Date *</label><input type="date" id="treat-date"/></div>
-        <div class="form-group form-full"><label>Acte effectué *</label><select id="treat-procedure"><option value="">— Sélectionner l'acte —</option></select></div>
+        <div class="form-group form-full"><label>Acte effectué *</label><select id="treat-procedure" onchange="Treatments.suggestCost()"><option value="">— Sélectionner l'acte —</option></select></div>
         <div class="form-group form-full">
           <label>Dents traitées <span class="hint">(cliquer pour sélectionner)</span></label>
           <div class="mini-tooth-chart" id="mini-tooth-chart"></div>
@@ -818,7 +831,7 @@
       <div class="form-grid">
         <div class="form-group"><label>Prénom *</label><input type="text" id="staff-first"/></div>
         <div class="form-group"><label>Nom *</label><input type="text" id="staff-last"/></div>
-        <div class="form-group form-full"><label>Rôle *</label><select id="staff-role"><option>Dentiste</option><option>Orthodontiste</option><option>Chirurgien oral</option><option>Parodontiste</option><option>Endodontiste</option><option>Pédodontiste</option><option>Hygiéniste dentaire</option><option>Réceptionniste</option><option>Responsable administratif</option></select></div>
+        <div class="form-group form-full"><label>Rôle *</label><select id="staff-role"><option>Dentiste</option><option>Orthodontiste</option><option>Chirurgien oral</option><option>Parodontiste</option><option>Endodontiste</option><option>Pédodontiste</option><option>Hygiéniste dentaire</option><option>Assistante dentaire</option><option>Réceptionniste</option><option>Responsable administratif</option></select></div>
         <div class="form-group"><label>Téléphone</label><input type="tel" id="staff-phone"/></div>
         <div class="form-group"><label>E-mail</label><input type="email" id="staff-email"/></div>
         <div class="form-group"><label>N° de licence</label><input type="text" id="staff-license"/></div>
@@ -842,6 +855,20 @@
     <div class="modal-footer">
       <button class="btn-secondary" onclick="App.closeModal('modal-invoice-print')">Fermer</button>
       <button class="btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimer</button>
+    </div>
+  </div>
+
+  <!-- APERÇU FICHIER -->
+  <div class="modal modal-lg" id="modal-file-view" style="display:none">
+    <div class="modal-header">
+      <h3 id="file-view-title"><i class="fa-solid fa-image"></i> Fichier</h3>
+      <button class="modal-close" onclick="App.closeModal('modal-file-view')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body"><div id="file-view-content" class="file-view-content"></div></div>
+    <div class="modal-footer">
+      <button class="btn-danger" id="file-view-delete"><i class="fa-solid fa-trash"></i> Supprimer</button>
+      <a class="btn-secondary" id="file-view-download" download><i class="fa-solid fa-download"></i> Télécharger</a>
+      <button class="btn-primary" onclick="App.closeModal('modal-file-view')">Fermer</button>
     </div>
   </div>
 

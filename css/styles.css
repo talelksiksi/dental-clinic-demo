@@ -1123,3 +1123,117 @@ h1, h2, h3, .page-title, .logo-title { letter-spacing: -.01em; }
 .login-credit a { color: var(--dawn); font-weight: 600; }
 .login-credit a:hover { text-decoration: underline; }
 .login-wrap { display: flex; flex-direction: column; align-items: center; }
+
+/* ══════════════════════════════════════════
+   DÉMO INTERACTIVE — connexion, notifications, schéma dans la fiche, fichiers
+══════════════════════════════════════════ */
+.hidden { display: none !important; }
+.pass-row { display: flex; gap: .5rem; }
+.pass-row input { flex: 1; min-width: 0; }
+.hint-btn {
+  flex-shrink: 0; width: 46px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border); background: #fff8f2; color: #c4805a;
+  cursor: pointer; font-size: 1.05rem; transition: all var(--transition);
+}
+.hint-btn:hover { background: var(--dawn); color: #fff; border-color: var(--dawn); transform: rotate(-12deg) scale(1.05); }
+.hint-bubble {
+  background: #fff8f2; border: 1.5px dashed var(--dawn); border-radius: var(--radius-sm);
+  padding: .85rem 1rem; font-size: .82rem; color: var(--text-secondary);
+  animation: hintPop .25s ease-out;
+}
+.hint-title { font-weight: 700; color: var(--text); margin-bottom: .25rem; }
+.hint-bubble p { margin-bottom: .5rem; }
+.hint-bubble small { display: block; margin-top: .5rem; color: var(--text-muted); font-style: italic; }
+.hint-bubble code { font-family: var(--font-mono); background: #fff; padding: .05rem .35rem; border-radius: 4px; border: 1px solid var(--border); }
+.hint-cred { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .3rem 0; }
+.hint-fill { border: none; background: var(--primary); color: #fff; font-size: .72rem; font-weight: 600; padding: .3rem .65rem; border-radius: 6px; cursor: pointer; }
+.hint-fill:hover { background: var(--primary-dark); }
+@keyframes hintPop { from { opacity: 0; transform: translateY(-4px) scale(.98); } to { opacity: 1; transform: none; } }
+.login-error { color: var(--danger); background: var(--danger-light); border-radius: var(--radius-sm); padding: .55rem .75rem; font-size: .82rem; font-weight: 500; }
+.login-card.shake { animation: shake .4s; }
+@keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-8px); } 40%,80% { transform: translateX(8px); } }
+
+body.role-assistante .dentist-only { display: none !important; }
+
+.notif-wrap { position: relative; }
+.notif-panel {
+  position: absolute; right: 0; top: calc(100% + 8px); width: 340px; max-width: calc(100vw - 24px);
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); z-index: 300; overflow: hidden; animation: hintPop .2s ease-out;
+}
+.notif-head { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1rem; border-bottom: 1px solid var(--border); font-size: .85rem; }
+.notif-item { display: flex; gap: .75rem; padding: .75rem 1rem; border-bottom: 1px solid var(--border-light); cursor: pointer; transition: background var(--transition); }
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: var(--bg); }
+.notif-item > i { width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--primary-light); color: var(--primary); font-size: .9rem; }
+.notif-item.fun > i { background: #fff1e6; color: #c4805a; }
+.notif-item strong { font-size: .84rem; display: block; color: var(--text); }
+.notif-item p { font-size: .78rem; color: var(--text-muted); margin-top: .1rem; line-height: 1.4; }
+.notif-dot.visible { animation: pulseDot 1.8s infinite; }
+@keyframes pulseDot { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,.5); } 70% { box-shadow: 0 0 0 7px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
+
+/* Schéma dentaire dans la fiche patient */
+#detail-chart.active { display: grid; grid-template-columns: minmax(0,1fr); gap: 1rem; }
+@media (min-width: 1400px) { #detail-chart.active { grid-template-columns: minmax(0,1fr) 300px; align-items: start; } }
+button.tooth { font: inherit; padding: 0; }
+.teeth-row { gap: .25rem; }
+.tooth { width: 36px; height: 48px; }
+.tooth.caries { background: #fde8e0; border-color: #e7a982; }
+.tooth-legend.caries { background: #fde8e0; color: #9a4a2a; border: 1px solid #e7a982; }
+.chart-help { text-align: center; font-size: .78rem; color: var(--text-muted); margin-top: .75rem; }
+.tooth-summary { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: .5rem; }
+.tooth-summary > div { background: var(--bg); border-radius: var(--radius-sm); padding: .55rem .6rem; display: flex; flex-direction: column; }
+.tooth-summary strong { font-size: 1.15rem; color: var(--text); }
+.tooth-summary span { font-size: .72rem; color: var(--text-muted); }
+.tooth-head { display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; margin-bottom: .75rem; }
+.tooth-head h3 { font-size: 1.1rem; }
+.tooth-head p { font-size: .8rem; }
+.tooth-label { display: block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); margin: .9rem 0 .4rem; }
+.tooth-state-picker { display: flex; flex-wrap: wrap; gap: .35rem; }
+.tooth-state-picker button { cursor: pointer; font-family: inherit; opacity: .7; transition: all var(--transition); }
+.tooth-state-picker button:hover { opacity: 1; transform: translateY(-1px); }
+.tooth-state-picker button.active { opacity: 1; box-shadow: 0 0 0 2px var(--primary); }
+#tooth-note { width: 100%; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .5rem .65rem; font-family: inherit; font-size: .85rem; resize: vertical; }
+.tooth-actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .6rem; }
+.tooth-actions .btn-secondary { padding: .4rem .8rem; font-size: .8rem; }
+.tooth-history { display: flex; flex-direction: column; gap: .45rem; }
+.tooth-history-item { padding: .6rem .75rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; }
+.tooth-history-item:hover { border-color: var(--primary); }
+.tooth-history-item strong { font-size: .85rem; display: block; }
+.tooth-history-item small { font-size: .75rem; color: var(--text-muted); }
+.tooth-history-item p { font-size: .8rem; color: var(--text-secondary); margin-top: .25rem; }
+.tab i { margin-right: .25rem; }
+
+/* Fichiers */
+.file-thumb { width: 100%; height: 70px; border-radius: 6px; background: #1f2e2f center/cover no-repeat; margin-bottom: .45rem; }
+.files-empty { grid-column: 1 / -1; }
+.file-view-content { display: flex; justify-content: center; }
+.file-view-content img { max-width: 100%; max-height: 65vh; border-radius: var(--radius-sm); }
+.file-view-content iframe { width: 100%; height: 65vh; border: 0; }
+.modal-footer a.btn-secondary { text-decoration: none; display: inline-flex; align-items: center; gap: .4rem; }
+
+/* Divers */
+.icon-btn.remind { background: #e2f5ea; color: #25a35a; }
+.icon-btn.remind:hover { background: #25a35a; color: #fff; }
+.icon-btn.remind.sent { background: #25a35a; color: #fff; }
+tr.row-link { cursor: pointer; }
+tr.row-link:hover td { background: var(--bg); }
+.btn-danger-ghost { color: var(--danger); }
+.btn-danger-ghost:hover { background: var(--danger-light); border-color: var(--danger); }
+.schedule-item { cursor: pointer; }
+
+/* Mobile : schéma dentaire juste après l'identité du patient */
+@media (max-width: 900px) {
+  .patient-detail-sidebar { display: contents; }
+  .patient-profile-card { order: 1; }
+  .patient-detail-main  { order: 2; }
+  .medical-history-card { order: 3; }
+  .patient-detail-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .tooth { width: 100%; height: 42px; border-radius: 6px 6px 8px 8px; }
+  .teeth-row { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: .25rem; }
+  .tooth-number { font-size: .55rem; }
+  .tooth-icon { font-size: .85rem; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .tab { white-space: nowrap; }
+}
+@media (max-width: 900px) { .dental-chart-card .card-header { flex-direction: column; align-items: flex-start; gap: .6rem; } }
