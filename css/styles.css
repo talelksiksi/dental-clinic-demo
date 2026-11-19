@@ -4,8 +4,8 @@
 
 /* ── Variables ── */
 :root {
-  --font-sans: 'Archivo', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --font-sans: 'Archivo', 'CI Arabic', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'CI Arabic', ui-monospace, Consolas, monospace;
   --sea: #3d6d78;
   --pine: #2f5a46;
   --dawn: #e7a982;
